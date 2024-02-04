@@ -19,5 +19,9 @@ namespace DB_Analyzer.Analyzers
         public abstract Task<int> GetNumberOfTables();
 
         public abstract Task<List<string>> GetTablesNames();
+
+        public abstract Task<int> GetNumberOfColumns(string tableName);
+
+        public abstract Task<List<string>> GetColumnsNames(string tableName);
     }
 }

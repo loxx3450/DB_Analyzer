@@ -4,6 +4,7 @@ using DB_Analyzer.ReportItems;
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
 
@@ -16,6 +17,8 @@ NumberOfTablesReportItem item = new();
 List<IReportItem<object>> reportItems = new();
 reportItems.Add(new NumberOfTablesReportItem());
 reportItems.Add(new TablesNamesReportItem());
+reportItems.Add(new NumberOfColumnsReportItem("users"));
+reportItems.Add(new ColumnsNamesReportItem("users"));
 
 await manager.Analyze(reportItems);
 
@@ -25,6 +28,59 @@ Console.WriteLine(reportItems[0].Value);
 List<string> strings = (reportItems[1] as TablesNamesReportItem).Value;
 
 strings.ForEach(item => Console.WriteLine(item));
+
+Console.WriteLine(reportItems[2].Value);
+
+strings = (reportItems[3] as ColumnsNamesReportItem).Value;
+
+strings.ForEach(item => Console.WriteLine(item));
+
+#region example
+
+//string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
+
+//SqlServerManager manager = new(connString);
+
+//await manager.ConnectToDBAsync();
+
+//NumberOfTablesReportItem item = new();
+
+//List<IReportItem<object>> reportItems = new();
+//reportItems.Add(new NumberOfTablesReportItem());
+//reportItems.Add(new TablesNamesReportItem());
+
+//await manager.Analyze(reportItems);
+
+//int tablesCount = (int)(reportItems[0] as NumberOfTablesReportItem).Value;
+//List<string> tablesNames = (reportItems[1] as TablesNamesReportItem).Value;
+
+//Console.WriteLine(tablesCount);
+
+//for (int i = 0; i < tablesCount; i++)
+//{
+//    reportItems.Clear();
+
+//    Console.WriteLine(tablesNames[i]);
+
+//    reportItems.Add(new NumberOfColumnsReportItem(tablesNames[i]));
+//    reportItems.Add(new ColumnsNamesReportItem(tablesNames[i]));
+
+//    Console.WriteLine();
+
+//    await manager.Analyze(reportItems);
+
+//    int columnsCount = (int)(reportItems[0] as NumberOfColumnsReportItem).Value;
+//    List<string> columnsNames = (reportItems[1] as ColumnsNamesReportItem).Value;
+
+//    for (int j = 0; j < columnsCount; j++)
+//    {
+//        Console.WriteLine(columnsNames[j]);
+//    }
+
+//    Console.WriteLine();
+//}
+
+#endregion
 
 #region reportItems
 
