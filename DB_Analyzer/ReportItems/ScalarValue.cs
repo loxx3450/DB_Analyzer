@@ -11,7 +11,7 @@ namespace DB_Analyzer.ReportItems
         public T Value { get; set; }
 
 
-        public static explicit operator T(ScalarValue<T> sv)
+        public static implicit operator T(ScalarValue<T> sv)
         {
             return sv.Value;
         }

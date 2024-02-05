@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -56,18 +57,36 @@ namespace DB_Analyzer.Analyzers
             }
         }
 
+        public async override Task<DataTable> GetTablesFullInfo()
+        {
+            string query = "SELECT * FROM sys.tables";
+
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+
+            try
+            {
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                {
+                    DataTable dataTable = new DataTable();
+
+                    dataTable.Load(reader);
+
+                    return dataTable;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async override Task<int> GetNumberOfColumns(string tableName)
         {
             string query = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @Table";
 
             SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
-            command.Parameters.Add(new SqlParameter()
-            {
-                ParameterName = "@Table",
-                SqlDbType = SqlDbType.NVarChar,
-                Value = tableName
-            });
+            command.Parameters.Add(new SqlParameter("Table", tableName));
 
             try
             {
@@ -87,12 +106,7 @@ namespace DB_Analyzer.Analyzers
 
             SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
-            command.Parameters.Add(new SqlParameter() 
-            { 
-                ParameterName = "@Table", 
-                SqlDbType = SqlDbType.NVarChar, 
-                Value = tableName
-            });
+            command.Parameters.Add(new SqlParameter("Table", tableName));
 
             try
             {
@@ -107,6 +121,96 @@ namespace DB_Analyzer.Analyzers
                 }
             }
             catch(Exception ex) 
+            {
+                throw;
+            }
+        }
+
+        public async override Task<DataTable> GetColumnsFullInfo(string tableName)
+        {
+            string query = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @Table";
+
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+
+            command.Parameters.Add(new SqlParameter("Table", tableName));
+
+            try
+            {
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                {
+                    DataTable dataTable = new DataTable();
+
+                    dataTable.Load(reader);
+
+                    return dataTable;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async override Task<int> GetNumberOfStoredProcedures()
+        {
+            string query = "SELECT COUNT(*) FROM sys.procedures";
+
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+
+            try
+            {
+                return (int)await command.ExecuteScalarAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async override Task<List<string>> GetStoredProceduresNames()
+        {
+            List<string> storedProceduresNames = new List<string>();
+
+            string query = "SELECT NAME FROM sys.procedures";
+
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+
+            try
+            {
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                {
+                    while (reader.Read())
+                    {
+                        storedProceduresNames.Add(reader.GetFieldValue<string>("NAME"));
+                    }
+
+                    return storedProceduresNames;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async override Task<DataTable> GetStoredProceduresFullInfo()
+        {
+            string query = "SELECT * FROM sys.procedures";
+
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+
+            try
+            {
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                {
+                    DataTable dataTable = new DataTable();
+
+                    dataTable.Load(reader);
+
+                    return dataTable;
+                }
+            }
+            catch (Exception ex)
             {
                 throw;
             }

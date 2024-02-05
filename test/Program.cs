@@ -6,40 +6,56 @@ using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 
-string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
+#region main
 
+string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
 SqlServerManager manager = new(connString);
+
+
+//string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
+//MySqlManager manager = new(connString);
 
 await manager.ConnectToDBAsync();
 
-NumberOfTablesReportItem item = new();
+
 
 List<IReportItem<object>> reportItems = new();
 reportItems.Add(new NumberOfTablesReportItem());
 reportItems.Add(new TablesNamesReportItem());
 reportItems.Add(new NumberOfColumnsReportItem("users"));
 reportItems.Add(new ColumnsNamesReportItem("users"));
+reportItems.Add(new NumberOfStoredProceduresReportItem());
+reportItems.Add(new StoredProceduresNamesReportItem());
+
 
 await manager.Analyze(reportItems);
 
-//reportItems.ForEach(reportItem => Console.WriteLine(reportItem.Value));
+
 
 Console.WriteLine(reportItems[0].Value);
-List<string> strings = (reportItems[1] as TablesNamesReportItem).Value;
+int wow = (reportItems[0] as NumberOfTablesReportItem).Value;
 
+List<string> strings = (reportItems[1] as TablesNamesReportItem).Value;
 strings.ForEach(item => Console.WriteLine(item));
 
 Console.WriteLine(reportItems[2].Value);
 
 strings = (reportItems[3] as ColumnsNamesReportItem).Value;
-
 strings.ForEach(item => Console.WriteLine(item));
+
+Console.WriteLine(reportItems[4].Value);
+
+strings = (reportItems[5] as StoredProceduresNamesReportItem).Value;
+strings.ForEach(item => Console.WriteLine(item));
+
+#endregion
 
 #region example
 
-//string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
+////string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
+//string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
 
-//SqlServerManager manager = new(connString);
+//MySqlManager manager = new(connString);
 
 //await manager.ConnectToDBAsync();
 
@@ -92,7 +108,7 @@ strings.ForEach(item => Console.WriteLine(item));
 
 //list.ForEach(item => Console.WriteLine(item.Value));
 
-//int wow = (int)(list[0] as IntReportItem).Value;
+//int wow = (list[0] as IntReportItem).Value;
 
 //Console.WriteLine(wow);
 
@@ -102,14 +118,14 @@ strings.ForEach(item => Console.WriteLine(item));
 //    public T Value { get; set; }
 
 
-//    public static explicit operator T(ScalarValue<T> sv)
+//    //public static explicit operator T(ScalarValue<T> sv)
+//    //{
+//    //    return sv.Value;
+//    //}
+
+//    public static implicit operator T(ScalarValue<T> sv)
 //    {
 //        return sv.Value;
-//    }
-
-//    public static implicit operator ScalarValue<T>(T sv)
-//    {
-//        return new ScalarValue<T>() { Value = sv };
 //    }
 
 //    public override string ToString()
