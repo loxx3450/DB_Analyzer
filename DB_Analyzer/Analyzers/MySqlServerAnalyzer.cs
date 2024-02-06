@@ -17,7 +17,10 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<int> GetNumberOfTables()
         {
-            string query = $"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{ Connection.Database }' and TABLE_TYPE='BASE TABLE';";
+            string query = $"SELECT COUNT(*) " +
+                $"FROM INFORMATION_SCHEMA.TABLES " +
+                $"WHERE TABLE_SCHEMA = '{ Connection.Database }' " +
+                $"  AND TABLE_TYPE='BASE TABLE';";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -25,9 +28,13 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)(await command.ExecuteScalarAsync());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
 
@@ -35,7 +42,10 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> tablesNames = new List<string>();
 
-            string query = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{Connection.Database}' AND table_type = 'base table';";
+            string query = $"SELECT TABLE_NAME " +
+                $"FROM INFORMATION_SCHEMA.TABLES " +
+                $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
+                $"  AND TABLE_TYPE = 'BASE TABLE';";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -51,15 +61,22 @@ namespace DB_Analyzer.Analyzers
                     return tablesNames;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
 
         public async override Task<DataTable> GetTablesFullInfo()
         {
-            string query = $"SELECT * FROM information_schema.tables WHERE table_schema = '{Connection.Database}' and TABLE_TYPE='BASE TABLE';";
+            string query = $"SELECT * " +
+                $"FROM INFORMATION_SCHEMA.TABLES " +
+                $"WHERE TABLE_SCHEMA = '{Connection.Database}' " +
+                $"  AND TABLE_TYPE='BASE TABLE';";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -74,15 +91,22 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
 
         public async override Task<int> GetNumberOfColumns(string tableName)
         {
-            string query = $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='{Connection.Database}' AND table_name = @Table;";
+            string query = $"SELECT COUNT(*) " +
+                $"FROM INFORMATION_SCHEMA.COLUMNS " +
+                $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
+                $"  AND TABLE_NAME = @Table;";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -92,17 +116,25 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)(await command.ExecuteScalarAsync());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
+            finally
+            {
+                command.Dispose();
+            }
         }
 
-        public async override Task<List<string>> GetColumnsNames(string tableName)              //Check
+        public async override Task<List<string>> GetColumnsNames(string tableName)
         {
             List<string> columnsNames = new List<string>();
 
-            string query = $"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='{Connection.Database}' AND table_name = @Table";
+            string query = $"SELECT COLUMN_NAME " +
+                $"FROM INFORMATION_SCHEMA.COLUMNS " +
+                $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
+                $"  AND TABLE_NAME = @Table";
+
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -120,15 +152,22 @@ namespace DB_Analyzer.Analyzers
                     return columnsNames;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
 
         public async override Task<DataTable> GetColumnsFullInfo(string tableName)
         {
-            string query = $"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='{Connection.Database}' AND table_name = @Table";
+            string query = $"SELECT * " +
+                $"FROM INFORMATION_SCHEMA.COLUMNS " +
+                $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
+                $"  AND TABLE_NAME = @Table";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -145,15 +184,22 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
 
         public async override Task<int> GetNumberOfStoredProcedures()
         {
-            string query = $"SELECT count(ROUTINE_NAME) FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE=\"PROCEDURE\" AND ROUTINE_SCHEMA=\"{ Connection.Database }\";";
+            string query = $"SELECT COUNT(ROUTINE_NAME) " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
+                $"  AND ROUTINE_SCHEMA=\"{ Connection.Database }\";";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -161,9 +207,13 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)(await command.ExecuteScalarAsync());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
 
@@ -171,7 +221,10 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> storedProceduresNames = new List<string>();
 
-            string query = $"SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE=\"PROCEDURE\" AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+            string query = $"SELECT ROUTINE_NAME " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -187,15 +240,22 @@ namespace DB_Analyzer.Analyzers
                     return storedProceduresNames;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
 
         public async override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            string query = $"SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE=\"PROCEDURE\" AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+            string query = $"SELECT * " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
@@ -210,9 +270,13 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                command.Dispose();
             }
         }
     }

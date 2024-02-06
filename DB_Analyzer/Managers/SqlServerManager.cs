@@ -22,7 +22,7 @@ namespace DB_Analyzer.Managers
             {
                 await Connection.OpenAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

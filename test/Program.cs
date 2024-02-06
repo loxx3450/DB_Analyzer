@@ -19,13 +19,15 @@ await manager.ConnectToDBAsync();
 
 
 
-List<IReportItem<object>> reportItems = new();
-reportItems.Add(new NumberOfTablesReportItem());
-reportItems.Add(new TablesNamesReportItem());
-reportItems.Add(new NumberOfColumnsReportItem("users"));
-reportItems.Add(new ColumnsNamesReportItem("users"));
-reportItems.Add(new NumberOfStoredProceduresReportItem());
-reportItems.Add(new StoredProceduresNamesReportItem());
+List<IReportItem<object>> reportItems = new()
+{
+    new NumberOfTablesReportItem(),
+    new TablesNamesReportItem(),
+    new NumberOfColumnsReportItem("users"),
+    new ColumnsNamesReportItem("users"),
+    new NumberOfStoredProceduresReportItem(),
+    new StoredProceduresNamesReportItem()
+};
 
 
 await manager.Analyze(reportItems);
@@ -33,19 +35,19 @@ await manager.Analyze(reportItems);
 
 
 Console.WriteLine(reportItems[0].Value);
-int wow = (reportItems[0] as NumberOfTablesReportItem).Value;
+int wow = ((NumberOfTablesReportItem)reportItems[0]).Value;
 
-List<string> strings = (reportItems[1] as TablesNamesReportItem).Value;
+List<string> strings = ((TablesNamesReportItem)reportItems[1]).Value;
 strings.ForEach(item => Console.WriteLine(item));
 
 Console.WriteLine(reportItems[2].Value);
 
-strings = (reportItems[3] as ColumnsNamesReportItem).Value;
+strings = ((ColumnsNamesReportItem)reportItems[3]).Value;
 strings.ForEach(item => Console.WriteLine(item));
 
 Console.WriteLine(reportItems[4].Value);
 
-strings = (reportItems[5] as StoredProceduresNamesReportItem).Value;
+strings = ((StoredProceduresNamesReportItem)reportItems[5]).Value;
 strings.ForEach(item => Console.WriteLine(item));
 
 #endregion
