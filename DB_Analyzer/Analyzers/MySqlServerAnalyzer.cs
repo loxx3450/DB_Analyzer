@@ -26,7 +26,7 @@ namespace DB_Analyzer.Analyzers
 
             try
             {
-                return (int)(await command.ExecuteScalarAsync());
+                return Convert.ToInt32(await command.ExecuteScalarAsync());
             }
             catch (Exception)
             {
@@ -101,99 +101,6 @@ namespace DB_Analyzer.Analyzers
             }
         }
 
-        public async override Task<int> GetNumberOfColumns(string tableName)
-        {
-            string query = $"SELECT COUNT(*) " +
-                $"FROM INFORMATION_SCHEMA.COLUMNS " +
-                $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
-                $"  AND TABLE_NAME = @Table;";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
-
-            command.Parameters.Add(new MySqlParameter("Table", tableName));
-
-            try
-            {
-                return (int)(await command.ExecuteScalarAsync());
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                command.Dispose();
-            }
-        }
-
-        public async override Task<List<string>> GetColumnsNames(string tableName)
-        {
-            List<string> columnsNames = new List<string>();
-
-            string query = $"SELECT COLUMN_NAME " +
-                $"FROM INFORMATION_SCHEMA.COLUMNS " +
-                $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
-                $"  AND TABLE_NAME = @Table";
-
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
-
-            command.Parameters.Add(new MySqlParameter("Table", tableName));
-
-            try
-            {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
-                {
-                    while (reader.Read())
-                    {
-                        columnsNames.Add(reader.GetFieldValue<string>("COLUMN_NAME"));
-                    }
-
-                    return columnsNames;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                command.Dispose();
-            }
-        }
-
-        public async override Task<DataTable> GetColumnsFullInfo(string tableName)
-        {
-            string query = $"SELECT * " +
-                $"FROM INFORMATION_SCHEMA.COLUMNS " +
-                $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
-                $"  AND TABLE_NAME = @Table";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
-
-            command.Parameters.Add(new MySqlParameter("Table", tableName));
-
-            try
-            {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
-                {
-                    DataTable dataTable = new DataTable();
-
-                    dataTable.Load(reader);
-
-                    return dataTable;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                command.Dispose();
-            }
-        }
-
         public async override Task<int> GetNumberOfStoredProcedures()
         {
             string query = $"SELECT COUNT(ROUTINE_NAME) " +
@@ -205,7 +112,7 @@ namespace DB_Analyzer.Analyzers
 
             try
             {
-                return (int)(await command.ExecuteScalarAsync());
+                return Convert.ToInt32(await command.ExecuteScalarAsync());
             }
             catch (Exception)
             {
@@ -255,6 +162,122 @@ namespace DB_Analyzer.Analyzers
             string query = $"SELECT * " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+
+            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
+
+            try
+            {
+                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+                {
+                    DataTable dataTable = new DataTable();
+
+                    dataTable.Load(reader);
+
+                    return dataTable;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                command.Dispose();
+            }
+        }
+
+        public override Task<int> GetNumberOfScalarFunctions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<List<string>> GetScalarFunctionsNames()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<DataTable> GetScalarFunctionsFullInfo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<int> GetNumberOfTableValuedFunctions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<List<string>> GetTableValuedFunctionsNames()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<DataTable> GetTableValuedFunctionsFullInfo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async override Task<int> GetNumberOfFunctions()
+        {
+            string query = $"SELECT COUNT(ROUTINE_NAME) " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+
+            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
+
+            try
+            {
+                return Convert.ToInt32(await command.ExecuteScalarAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                command.Dispose();
+            }
+        }
+
+        public async override Task<List<string>> GetFunctionsNames()
+        {
+            List<string> storedProceduresNames = new List<string>();
+
+            string query = $"SELECT ROUTINE_NAME " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+
+            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
+
+            try
+            {
+                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+                {
+                    while (reader.Read())
+                    {
+                        storedProceduresNames.Add(reader.GetFieldValue<string>("ROUTINE_NAME"));
+                    }
+
+                    return storedProceduresNames;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                command.Dispose();
+            }
+        }
+
+        public async override Task<DataTable> GetFunctionsFullInfo()
+        {
+            string query = $"SELECT * " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
 
             MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);

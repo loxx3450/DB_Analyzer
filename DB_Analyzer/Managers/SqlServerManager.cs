@@ -32,7 +32,7 @@ namespace DB_Analyzer.Managers
         {
             Analyzer = new SqlServerAnalyzer((SqlConnection)Connection);
 
-            foreach (var reportItem in reportItems) 
+            foreach (var reportItem in reportItems)
                 await reportItem.Run(Analyzer);
         }
     }

@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportItems
+namespace DB_Analyzer.ReportItems.Functions.Global
 {
-    public class TablesNamesReportItem : IReportItem<List<string>>
+    public class FunctionsNamesReportItem : IReportItem<List<string>>
     {
         public List<string> Value { get; private set; }
 
         public async Task Run(DbAnalyzer analyzer)
         {
-            Value = await analyzer.GetTablesNames();
+            Value = await analyzer.GetFunctionsNames();
         }
     }
 }

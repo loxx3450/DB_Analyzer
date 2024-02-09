@@ -1,6 +1,11 @@
 ﻿using DB_Analyzer.Analyzers;
 using DB_Analyzer.Managers;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportItems.Functions.Global;
+using DB_Analyzer.ReportItems.Functions.Scalar;
+using DB_Analyzer.ReportItems.Functions.TableValued;
+using DB_Analyzer.ReportItems.StoredProcedures;
+using DB_Analyzer.ReportItems.Tables;
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
@@ -8,12 +13,11 @@ using System.Data;
 
 #region main
 
-string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
-SqlServerManager manager = new(connString);
+string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
+MySqlManager manager = new(connString);
 
-
-//string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
-//MySqlManager manager = new(connString);
+//string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
+//SqlServerManager manager = new(connString);
 
 await manager.ConnectToDBAsync();
 
@@ -23,31 +27,43 @@ List<IReportItem<object>> reportItems = new()
 {
     new NumberOfTablesReportItem(),
     new TablesNamesReportItem(),
-    new NumberOfColumnsReportItem("users"),
-    new ColumnsNamesReportItem("users"),
     new NumberOfStoredProceduresReportItem(),
-    new StoredProceduresNamesReportItem()
+    new StoredProceduresNamesReportItem(),
+    new NumberOfFunctionsReportItem(),
+    new FunctionsNamesReportItem(),
+    new NumberOfScalarFunctionsReportItem(),
+    new ScalarFunctionsNamesReportItem(),
+    new NumberOfTableValuedFunctionsReportItem(),
+    new TableValuedFunctionsNamesReportItem()
 };
-
 
 await manager.Analyze(reportItems);
 
 
 
 Console.WriteLine(reportItems[0].Value);
-int wow = ((NumberOfTablesReportItem)reportItems[0]).Value;
 
 List<string> strings = ((TablesNamesReportItem)reportItems[1]).Value;
 strings.ForEach(item => Console.WriteLine(item));
 
 Console.WriteLine(reportItems[2].Value);
 
-strings = ((ColumnsNamesReportItem)reportItems[3]).Value;
+strings = ((StoredProceduresNamesReportItem)reportItems[3]).Value;
 strings.ForEach(item => Console.WriteLine(item));
 
 Console.WriteLine(reportItems[4].Value);
 
-strings = ((StoredProceduresNamesReportItem)reportItems[5]).Value;
+strings = ((FunctionsNamesReportItem)reportItems[5]).Value;
+strings.ForEach(item => Console.WriteLine(item));
+
+Console.WriteLine(reportItems[6].Value);
+
+strings = ((ScalarFunctionsNamesReportItem)reportItems[7]).Value;
+strings.ForEach(item => Console.WriteLine(item));
+
+Console.WriteLine(reportItems[8].Value);
+
+strings = ((TableValuedFunctionsNamesReportItem)reportItems[9]).Value;
 strings.ForEach(item => Console.WriteLine(item));
 
 #endregion

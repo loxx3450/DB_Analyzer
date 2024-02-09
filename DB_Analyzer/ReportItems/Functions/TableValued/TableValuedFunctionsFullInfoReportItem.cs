@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportItems
+namespace DB_Analyzer.ReportItems.Functions.TableValued
 {
-    public class StoredProceduresFullInfoReportItem : IReportItem<DataTable>
+    public class TableValuedFunctionsFullInfoReportItem : IReportItem<DataTable>
     {
         public DataTable Value { get; private set; }
 
         public async Task Run(DbAnalyzer analyzer)
         {
-            Value = await analyzer.GetStoredProceduresFullInfo();
+            Value = await analyzer.GetTableValuedFunctionsFullInfo();
         }
     }
 }

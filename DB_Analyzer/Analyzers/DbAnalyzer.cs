@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -13,7 +14,7 @@ namespace DB_Analyzer.Analyzers
         public DbConnection Connection { get; set; }
 
         public DbAnalyzer(DbConnection connection) 
-        { 
+        {
             Connection = connection;
         }
 
@@ -23,16 +24,28 @@ namespace DB_Analyzer.Analyzers
 
         public abstract Task<DataTable> GetTablesFullInfo();
 
-        public abstract Task<int> GetNumberOfColumns(string tableName);
-
-        public abstract Task<List<string>> GetColumnsNames(string tableName);
-
-        public abstract Task<DataTable> GetColumnsFullInfo(string tableName);
-
         public abstract Task<int> GetNumberOfStoredProcedures();
 
         public abstract Task<List<string>> GetStoredProceduresNames();
 
         public abstract Task<DataTable> GetStoredProceduresFullInfo();
+
+        public abstract Task<int> GetNumberOfScalarFunctions();
+
+        public abstract Task<List<string>> GetScalarFunctionsNames();
+
+        public abstract Task<DataTable> GetScalarFunctionsFullInfo();
+
+        public abstract Task<int> GetNumberOfTableValuedFunctions();
+
+        public abstract Task<List<string>> GetTableValuedFunctionsNames();
+
+        public abstract Task<DataTable> GetTableValuedFunctionsFullInfo();
+
+        public abstract Task<int> GetNumberOfFunctions();
+
+        public abstract Task<List<string>> GetFunctionsNames();
+
+        public abstract Task<DataTable> GetFunctionsFullInfo();
     }
 }

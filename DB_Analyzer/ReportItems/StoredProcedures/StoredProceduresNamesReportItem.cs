@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportItems
+namespace DB_Analyzer.ReportItems.StoredProcedures
 {
     public class StoredProceduresNamesReportItem : IReportItem<List<string>>
     {
