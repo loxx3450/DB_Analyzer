@@ -1,4 +1,5 @@
 ﻿using DB_Analyzer.Analyzers;
+using DB_Analyzer.Helpers.ReportItemsListsCreators;
 using DB_Analyzer.ReportItems;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
@@ -14,7 +15,10 @@ namespace DB_Analyzer.Managers
     {
         public SqlServerManager(string connectionString)
             : base(connectionString, new SqlConnection(connectionString))
-        { }
+        {
+            ReportItemsListCreator = new SqlServerReportItemsListCreator();
+
+        }
 
         public async override Task ConnectToDBAsync()
         {
@@ -34,6 +38,11 @@ namespace DB_Analyzer.Managers
 
             foreach (var reportItem in reportItems)
                 await reportItem.Run(Analyzer);
+        }
+
+        public override List<IReportItem<object>> GetAllPossibleReportItems()
+        {
+            return ReportItemsListCreator.GetAllPossibleReportItems();
         }
     }
 }

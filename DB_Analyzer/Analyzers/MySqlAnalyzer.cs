@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.Analyzers
 {
-    internal class MySqlServerAnalyzer : DbAnalyzer
+    internal class MySqlAnalyzer : DbAnalyzer
     {
-        public MySqlServerAnalyzer(MySqlConnection connection)
+        public MySqlAnalyzer(MySqlConnection connection)
             : base(connection)
         { }
 

@@ -1,4 +1,5 @@
 ﻿using DB_Analyzer.Analyzers;
+using DB_Analyzer.ReportItems.Flags;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Functions.TableValued
 {
-    public class TableValuedFunctionsFullInfoReportItem : IReportItem<DataTable>
+    public class TableValuedFunctionsFullInfoReportItem : IReportItem<DataTable>, ISqlServerReportItem
     {
         public DataTable Value { get; private set; }
 

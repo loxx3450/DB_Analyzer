@@ -1,4 +1,5 @@
 ﻿using DB_Analyzer.Analyzers;
+using DB_Analyzer.ReportItems.Flags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Functions.Global
 {
-    public class NumberOfFunctionsReportItem : IReportItem<ScalarValue<int>>
+    public class NumberOfFunctionsReportItem : IReportItem<ScalarValue<int>>, ISqlServerReportItem, IMySqlReportItem
     {
         public ScalarValue<int> Value { get; private set; }
 

@@ -1,6 +1,7 @@
 ﻿using DB_Analyzer.Analyzers;
 using DB_Analyzer.Managers;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportItems.Flags;
 using DB_Analyzer.ReportItems.Functions.Global;
 using DB_Analyzer.ReportItems.Functions.Scalar;
 using DB_Analyzer.ReportItems.Functions.TableValued;
@@ -19,52 +20,47 @@ MySqlManager manager = new(connString);
 //string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
 //SqlServerManager manager = new(connString);
 
+
+
 await manager.ConnectToDBAsync();
 
 
 
-List<IReportItem<object>> reportItems = new()
-{
-    new NumberOfTablesReportItem(),
-    new TablesNamesReportItem(),
-    new NumberOfStoredProceduresReportItem(),
-    new StoredProceduresNamesReportItem(),
-    new NumberOfFunctionsReportItem(),
-    new FunctionsNamesReportItem(),
-    new NumberOfScalarFunctionsReportItem(),
-    new ScalarFunctionsNamesReportItem(),
-    new NumberOfTableValuedFunctionsReportItem(),
-    new TableValuedFunctionsNamesReportItem()
-};
+List<IReportItem<object>> reportItems = manager.GetAllPossibleReportItems();
+
+//List<IReportItem<object>> reportItems = new()
+//{
+//    new NumberOfTablesReportItem(),
+//    new TablesNamesReportItem(),
+//    new NumberOfStoredProceduresReportItem(),
+//    new StoredProceduresNamesReportItem(),
+//    new NumberOfFunctionsReportItem(),
+//    new FunctionsNamesReportItem(),
+//    new NumberOfScalarFunctionsReportItem(),
+//    new ScalarFunctionsNamesReportItem(),
+//    new NumberOfTableValuedFunctionsReportItem(),
+//    new TableValuedFunctionsNamesReportItem()
+//};
+
+
 
 await manager.Analyze(reportItems);
 
 
 
-Console.WriteLine(reportItems[0].Value);
-
-List<string> strings = ((TablesNamesReportItem)reportItems[1]).Value;
-strings.ForEach(item => Console.WriteLine(item));
-
-Console.WriteLine(reportItems[2].Value);
-
-strings = ((StoredProceduresNamesReportItem)reportItems[3]).Value;
-strings.ForEach(item => Console.WriteLine(item));
-
-Console.WriteLine(reportItems[4].Value);
-
-strings = ((FunctionsNamesReportItem)reportItems[5]).Value;
-strings.ForEach(item => Console.WriteLine(item));
-
-Console.WriteLine(reportItems[6].Value);
-
-strings = ((ScalarFunctionsNamesReportItem)reportItems[7]).Value;
-strings.ForEach(item => Console.WriteLine(item));
-
-Console.WriteLine(reportItems[8].Value);
-
-strings = ((TableValuedFunctionsNamesReportItem)reportItems[9]).Value;
-strings.ForEach(item => Console.WriteLine(item));
+foreach (var reportItem in reportItems)
+{
+    if (reportItem.Value.GetType() == typeof(ScalarValue<int>))
+    {
+        Console.WriteLine(reportItem.Value);
+    }
+    else if (reportItem.Value.GetType() == typeof(List<string>)) 
+    {
+        List<string> strings = (List<string>)reportItem.Value;
+        strings.ForEach(item => Console.WriteLine(item));
+        Console.WriteLine();
+    }
+}
 
 #endregion
 
