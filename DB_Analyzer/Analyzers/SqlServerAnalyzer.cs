@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DB_Analyzer.Exceptions;
+using DB_Analyzer.Exceptions.AnalyzerExceptions;
+using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -26,9 +28,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)await command.ExecuteScalarAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -58,9 +60,9 @@ namespace DB_Analyzer.Analyzers
                     return tablesNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -86,9 +88,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -107,9 +109,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)await command.ExecuteScalarAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -138,9 +140,9 @@ namespace DB_Analyzer.Analyzers
                     return storedProceduresNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -166,9 +168,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -190,9 +192,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)(await command.ExecuteScalarAsync());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -224,9 +226,9 @@ namespace DB_Analyzer.Analyzers
                     return functionsNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -255,9 +257,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -279,9 +281,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)(await command.ExecuteScalarAsync());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -313,9 +315,9 @@ namespace DB_Analyzer.Analyzers
                     return functionsNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -344,9 +346,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -368,9 +370,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return (int)(await command.ExecuteScalarAsync());
             }
-            catch (Exception) 
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -402,9 +404,9 @@ namespace DB_Analyzer.Analyzers
                     return functionsNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -433,9 +435,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {

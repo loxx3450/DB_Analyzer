@@ -14,11 +14,11 @@ using System.Data;
 
 #region main
 
-string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
-MySqlManager manager = new(connString);
+//string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
+//MySqlManager manager = new(connString);
 
-//string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
-//SqlServerManager manager = new(connString);
+string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
+SqlServerManager manager = new(connString);
 
 
 
@@ -26,21 +26,21 @@ await manager.ConnectToDBAsync();
 
 
 
-List<IReportItem<object>> reportItems = manager.GetAllPossibleReportItems();
+//List<IReportItem<object>> reportItems = manager.GetAllPossibleReportItems();
 
-//List<IReportItem<object>> reportItems = new()
-//{
-//    new NumberOfTablesReportItem(),
-//    new TablesNamesReportItem(),
-//    new NumberOfStoredProceduresReportItem(),
-//    new StoredProceduresNamesReportItem(),
-//    new NumberOfFunctionsReportItem(),
-//    new FunctionsNamesReportItem(),
-//    new NumberOfScalarFunctionsReportItem(),
-//    new ScalarFunctionsNamesReportItem(),
-//    new NumberOfTableValuedFunctionsReportItem(),
-//    new TableValuedFunctionsNamesReportItem()
-//};
+List<IReportItem<object>> reportItems = new()
+{
+    new NumberOfTablesReportItem(),
+    new TablesNamesReportItem(),
+    new NumberOfStoredProceduresReportItem(),
+    new StoredProceduresNamesReportItem(),
+    new NumberOfFunctionsReportItem(),
+    new FunctionsNamesReportItem(),
+    new NumberOfScalarFunctionsReportItem(),
+    new ScalarFunctionsNamesReportItem(),
+    new NumberOfTableValuedFunctionsReportItem(),
+    new TableValuedFunctionsNamesReportItem()
+};
 
 
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DB_Analyzer.Exceptions.AnalyzerExceptions;
+using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return Convert.ToInt32(await command.ExecuteScalarAsync());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -61,9 +62,9 @@ namespace DB_Analyzer.Analyzers
                     return tablesNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -91,9 +92,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -114,9 +115,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return Convert.ToInt32(await command.ExecuteScalarAsync());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -147,9 +148,9 @@ namespace DB_Analyzer.Analyzers
                     return storedProceduresNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -177,9 +178,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -189,32 +190,32 @@ namespace DB_Analyzer.Analyzers
 
         public override Task<int> GetNumberOfScalarFunctions()
         {
-            throw new NotImplementedException();
+            throw new MySqlAnalyzerException(MySqlAnalyzerException.methodIsNotSupported);
         }
 
         public override Task<List<string>> GetScalarFunctionsNames()
         {
-            throw new NotImplementedException();
+            throw new MySqlAnalyzerException(MySqlAnalyzerException.methodIsNotSupported);
         }
 
         public override Task<DataTable> GetScalarFunctionsFullInfo()
         {
-            throw new NotImplementedException();
+            throw new MySqlAnalyzerException(MySqlAnalyzerException.methodIsNotSupported);
         }
 
         public override Task<int> GetNumberOfTableValuedFunctions()
         {
-            throw new NotImplementedException();
+            throw new MySqlAnalyzerException(MySqlAnalyzerException.methodIsNotSupported);
         }
 
         public override Task<List<string>> GetTableValuedFunctionsNames()
         {
-            throw new NotImplementedException();
+            throw new MySqlAnalyzerException(MySqlAnalyzerException.methodIsNotSupported);
         }
 
         public override Task<DataTable> GetTableValuedFunctionsFullInfo()
         {
-            throw new NotImplementedException();
+            throw new MySqlAnalyzerException(MySqlAnalyzerException.methodIsNotSupported);
         }
 
         public async override Task<int> GetNumberOfFunctions()
@@ -230,9 +231,9 @@ namespace DB_Analyzer.Analyzers
             {
                 return Convert.ToInt32(await command.ExecuteScalarAsync());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -263,9 +264,9 @@ namespace DB_Analyzer.Analyzers
                     return storedProceduresNames;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
@@ -293,9 +294,9 @@ namespace DB_Analyzer.Analyzers
                     return dataTable;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
             }
             finally
             {
