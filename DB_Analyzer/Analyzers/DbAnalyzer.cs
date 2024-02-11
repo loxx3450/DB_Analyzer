@@ -47,5 +47,9 @@ namespace DB_Analyzer.Analyzers
         public abstract Task<List<string>> GetFunctionsNames();
 
         public abstract Task<DataTable> GetFunctionsFullInfo();
+
+        //temp
+        public abstract Task<bool> GetBool();
+        //temp
     }
 }

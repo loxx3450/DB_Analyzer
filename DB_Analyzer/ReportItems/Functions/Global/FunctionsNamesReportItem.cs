@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Functions.Global
 {
-    public class FunctionsNamesReportItem : IReportItem<List<string>>, ISqlServerReportItem, IMySqlReportItem
+    public class FunctionsNamesReportItem : ReportItem<List<string>>, ISqlServerReportItem, IMySqlReportItem
     {
-        public List<string> Value { get; private set; }
+        public override string Name { get; } = "functionsNames";
+        public override List<string> Value { get; protected set; }
 
-        public async Task Run(DbAnalyzer analyzer)
+        public async override Task Run(DbAnalyzer analyzer)
         {
             Value = await analyzer.GetFunctionsNames();
         }

@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Functions.Global
 {
-    public class FunctionsFullInfoReportItem : IReportItem<DataTable>, ISqlServerReportItem, IMySqlReportItem
+    public class FunctionsFullInfoReportItem : ReportItem<DataTable>, ISqlServerReportItem, IMySqlReportItem
     {
-        public DataTable Value { get; private set; }
+        public override string Name { get; } = "functionsFullInfo";
+        public override DataTable Value { get; protected set; }
 
-        public async Task Run(DbAnalyzer analyzer)
+        public async override Task Run(DbAnalyzer analyzer)
         {
             Value = await analyzer.GetFunctionsFullInfo();
         }

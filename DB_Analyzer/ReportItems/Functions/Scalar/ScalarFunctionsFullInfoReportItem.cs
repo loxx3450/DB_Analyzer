@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Functions.Scalar
 {
-    public class ScalarFunctionsFullInfoReportItem : IReportItem<DataTable>, ISqlServerReportItem
+    public class ScalarFunctionsFullInfoReportItem : ReportItem<DataTable>, ISqlServerReportItem
     {
-        public DataTable Value { get; private set; }
+        public override string Name { get; } = "scalarFunctionsFullInfo";
+        public override DataTable Value { get; protected set; }
 
-        public async Task Run(DbAnalyzer analyzer)
+        public async override Task Run(DbAnalyzer analyzer)
         {
             Value = await analyzer.GetScalarFunctionsFullInfo();
         }

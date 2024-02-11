@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.StoredProcedures
 {
-    public class NumberOfStoredProceduresReportItem : IReportItem<ScalarValue<int>>, ISqlServerReportItem, IMySqlReportItem
+    public class NumberOfStoredProceduresReportItem : ReportItem<ScalarValue<int>>, ISqlServerReportItem, IMySqlReportItem
     {
-        public ScalarValue<int> Value { get; private set; }
+        public override string Name { get; } = "numberOfStoredProcedures";
+        public override ScalarValue<int> Value { get; protected set; }
 
-        public async Task Run(DbAnalyzer analyzer)
+        public async override Task Run(DbAnalyzer analyzer)
         {
             Value = await analyzer.GetNumberOfStoredProcedures();
         }

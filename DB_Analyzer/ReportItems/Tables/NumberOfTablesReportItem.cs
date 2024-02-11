@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Tables
 {
-    public class NumberOfTablesReportItem : IReportItem<ScalarValue<int>>, ISqlServerReportItem, IMySqlReportItem
+    public class NumberOfTablesReportItem : ReportItem<ScalarValue<int>>, ISqlServerReportItem, IMySqlReportItem
     {
-        public ScalarValue<int> Value { get; private set; }
+        public override string Name { get; } = "numberOfTables";
+        public override ScalarValue<int> Value { get; protected set; }
 
-        public async Task Run(DbAnalyzer analyzer)
+        public async override Task Run(DbAnalyzer analyzer)
         {
             Value = await analyzer.GetNumberOfTables();
         }

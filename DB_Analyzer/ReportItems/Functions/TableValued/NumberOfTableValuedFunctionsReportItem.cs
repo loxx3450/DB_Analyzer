@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Functions.TableValued
 {
-    public class NumberOfTableValuedFunctionsReportItem : IReportItem<ScalarValue<int>>, ISqlServerReportItem
+    public class NumberOfTableValuedFunctionsReportItem : ReportItem<ScalarValue<int>>, ISqlServerReportItem
     {
-        public ScalarValue<int> Value { get; private set; }
+        public override string Name { get; } = "numberOfTableValuedFunctions";
+        public override ScalarValue<int> Value { get; protected set; }
 
-        public async Task Run(DbAnalyzer analyzer)
+        public async override Task Run(DbAnalyzer analyzer)
         {
             Value = await analyzer.GetNumberOfTableValuedFunctions();
         }

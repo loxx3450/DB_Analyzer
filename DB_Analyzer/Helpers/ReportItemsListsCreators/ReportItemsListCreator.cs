@@ -32,6 +32,7 @@ namespace DB_Analyzer.Helpers.ReportItemsListsCreators
             new NumberOfTableValuedFunctionsReportItem(),
             new TableValuedFunctionsNamesReportItem(),
             new TableValuedFunctionsFullInfoReportItem(),
+            new GetBoolReportItem(),
         };
 
         public abstract List<IReportItem<object>> GetAllPossibleReportItems();

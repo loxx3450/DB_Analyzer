@@ -303,5 +303,11 @@ namespace DB_Analyzer.Analyzers
                 command.Dispose();
             }
         }
+        //temp
+        public async override Task<bool> GetBool()
+        {
+            return true;
+        }
+        //temp
     }
 }

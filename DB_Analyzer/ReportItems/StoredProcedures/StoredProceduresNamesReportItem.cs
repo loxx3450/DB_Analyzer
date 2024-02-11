@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.StoredProcedures
 {
-    public class StoredProceduresNamesReportItem : IReportItem<List<string>>, ISqlServerReportItem, IMySqlReportItem
+    public class StoredProceduresNamesReportItem : ReportItem<List<string>>, ISqlServerReportItem, IMySqlReportItem
     {
-        public List<string> Value { get; private set; }
+        public override string Name { get; } = "storedProceduresNames";
+        public override List<string> Value { get; protected set; }
 
-        public async Task Run(DbAnalyzer analyzer)
+        public async override Task Run(DbAnalyzer analyzer)
         {
             Value = await analyzer.GetStoredProceduresNames();
         }
