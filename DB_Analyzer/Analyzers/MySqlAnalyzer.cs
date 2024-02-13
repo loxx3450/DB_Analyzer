@@ -31,7 +31,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -64,7 +64,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -94,7 +94,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -117,7 +117,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -150,7 +150,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -180,7 +180,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -233,7 +233,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -266,7 +266,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -296,7 +296,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {

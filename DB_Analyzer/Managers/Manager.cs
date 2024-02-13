@@ -1,4 +1,5 @@
 ﻿using DB_Analyzer.Analyzers;
+using DB_Analyzer.Exceptions.Global;
 using DB_Analyzer.Helpers.ReportItemsListsCreators;
 using DB_Analyzer.ReportItems;
 using DB_Analyzer.ReportSavers;
@@ -35,9 +36,9 @@ namespace DB_Analyzer.Managers
             {
                 Connection.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new ConnectionException(ConnectionException.unableToCloseConnection + ex.Message, ex);
             }
         }
     }

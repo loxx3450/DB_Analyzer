@@ -10,6 +10,10 @@ namespace DB_Analyzer.Exceptions.AnalyzerExceptions
     {
         public const string methodIsNotSupported = "Method you try to execute is not supported by MySqlAnalyzer... Read documentation!!!";
 
+        public MySqlAnalyzerException() { }
+
         public MySqlAnalyzerException(string message) : base(message) { }
+
+        public MySqlAnalyzerException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

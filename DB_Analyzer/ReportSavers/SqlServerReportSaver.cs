@@ -1,9 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DB_Analyzer.ReportItems;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DB_Analyzer.ReportSavers.TypesHandler;
+using DB_Analyzer.Exceptions.ReportSaverExceptions;
+using DB_Analyzer.Exceptions.Global;
 
 namespace DB_Analyzer.ReportSavers
 {
@@ -22,24 +26,24 @@ namespace DB_Analyzer.ReportSavers
             {
                 await Connection.OpenAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new ConnectionException(ConnectionException.unableToOpenConnection, ex);
             }
         }
 
-        public async override Task SaveReport()
+        public async override Task SaveReport(List<IReportItem<object>> reportItems)
         {
             await OpenDBAsync();
 
-            await ProvideStructureForSaving();
+            await ProvideStructureForSaving(reportItems);
         }
 
-        private async Task ProvideStructureForSaving()
+        private async Task ProvideStructureForSaving(List<IReportItem<object>> reportItems)
         {
             await ProvideDefaultStructureForSaving();
 
-            await ProvideExtendedStructureForSaving();
+            await ProvideExtendedStructureForSaving(reportItems);
         }
 
         private async Task ProvideDefaultStructureForSaving()
@@ -87,9 +91,9 @@ namespace DB_Analyzer.ReportSavers
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
             }
             finally
             {
@@ -97,9 +101,46 @@ namespace DB_Analyzer.ReportSavers
             }
         }
 
-        private async Task ProvideExtendedStructureForSaving()
+        private async Task ProvideExtendedStructureForSaving(List<IReportItem<object>> reportItems)
         {
+            SqlCommand command = new SqlCommand() { Connection = Connection };
 
+            foreach (var reportItem in reportItems)
+            {
+                if (TypesHandler.TypesHandler.IsScalarValueType(reportItem.GetValueType()))
+                {
+                    command.CommandText = $"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'scalar_values' AND COLUMN_NAME = '{reportItem.Name}'";
+
+                    try
+                    {
+                        bool columnExists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+
+                        if (!columnExists)
+                        {
+                            command.CommandText = $"ALTER TABLE scalar_values ADD {reportItem.Name} {ConvertTypesForSqlServer(TypesHandler.TypesHandler.GetScalarValueType(reportItem.GetValueType()))} NULL";
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        
+                        ;
+                    }
+                }
+            }
+
+            command.Dispose();
+        }
+
+        string ConvertTypesForSqlServer(string dataType)
+        {
+            return dataType switch
+            {
+                "string" => "nvarchar(max)",
+                "int32" => "int",
+                "boolean" => "bit",
+                "byte" => "smallint",
+                _ => dataType
+            };
         }
 
         ~SqlServerReportSaver()
@@ -108,9 +149,9 @@ namespace DB_Analyzer.ReportSavers
             {
                 Connection.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new ConnectionException(ConnectionException.unableToCloseConnection, ex);
             }
         }
     }

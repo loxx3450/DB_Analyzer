@@ -1,4 +1,5 @@
 ﻿using DB_Analyzer.Analyzers;
+using DB_Analyzer.Exceptions.Global;
 using DB_Analyzer.Helpers;
 using DB_Analyzer.Helpers.ReportItemsListsCreators;
 using DB_Analyzer.ReportItems;
@@ -27,9 +28,9 @@ namespace DB_Analyzer.Managers
             {
                 await Connection.OpenAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new ConnectionException(ConnectionException.unableToOpenConnection + ex.Message, ex);
             }
         }
 
@@ -48,7 +49,7 @@ namespace DB_Analyzer.Managers
 
         public async override Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems)
         {
-            await reportSaver.SaveReport();
+            await reportSaver.SaveReport(reportItems);
         }
     }
 }

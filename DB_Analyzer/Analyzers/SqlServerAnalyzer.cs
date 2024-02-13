@@ -30,7 +30,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -62,7 +62,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -90,7 +90,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -111,7 +111,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -142,7 +142,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -170,7 +170,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -194,7 +194,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -228,7 +228,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -259,7 +259,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -283,7 +283,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -317,7 +317,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -348,7 +348,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -372,7 +372,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -406,7 +406,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {
@@ -437,7 +437,7 @@ namespace DB_Analyzer.Analyzers
             }
             catch (Exception ex)
             {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message);
+                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
             }
             finally
             {

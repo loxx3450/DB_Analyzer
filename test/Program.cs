@@ -153,47 +153,6 @@ await manager.SaveReport(new SqlServerReportSaver(@"Server = (localdb)\MSSQLLoca
 //    }
 //}
 
-////    DataTable dt = new DataTable();
-
-////foreach (var reportItem in reportItems)
-////{
-////    query = string.Empty;
-
-////    query += $"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = '{reportItem.Name}') " +
-////                "BEGIN" +
-////                $"   CREATE TABLE {reportItem.Name} (" +
-////                "        ID INT PRIMARY KEY,";
-
-////    if (reportItem.Value.GetType() == typeof(ScalarValue<int>))
-////    {
-////        query += "        Value INT NOT NULL,";
-////    }
-////    else if (reportItem.Value.GetType() == typeof(List<string>))
-////    {
-////        query += "        Value NVARCHAR(100) NOT NULL,";
-////    }
-////    else if (reportItem.Value.GetType() == typeof(DataTable))
-////    {
-////        dt = (DataTable)reportItem.Value;
-
-////        foreach(DataColumn column in dt.Columns)
-////        {
-////            query += $"{column.ColumnName} {ConvertTypesForSqlServer(column.DataType.Name.ToLower())} NULL,";
-////        }
-////    }
-
-////    query += "        Report_ID INT NOT NULL," +
-////                $"        CONSTRAINT FK_{reportItem.Name}_Report_ID FOREIGN KEY (Report_ID) REFERENCES Reports(ID)" +
-////                "    )" +
-////                "END";
-
-////    cmd.CommandText = query;
-
-////    cmd.ExecuteNonQuery();
-////}
-
-//cmd.Dispose();
-
 //string ConvertTypesForSqlServer(string dataType)
 //{
 //    return dataType switch

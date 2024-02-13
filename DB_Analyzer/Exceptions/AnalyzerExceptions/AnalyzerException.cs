@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.Exceptions.AnalyzerExceptions
 {
-    public class AnalyzerException : Exception
+    public class AnalyzerException : DBAnalyzerException
     {
         public const string problemDuringHandling = "Something went wrong by command execution...\t";
 
-        public AnalyzerException() { }
+        public AnalyzerException(){ }
 
         public AnalyzerException(string message) : base(message) { }
 
