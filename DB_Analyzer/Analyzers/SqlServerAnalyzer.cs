@@ -19,10 +19,10 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<int> GetNumberOfTables()
         {
-            string query = "SELECT COUNT(*) " +
-                "FROM SYS.TABLES";
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+            command.CommandText = "SELECT COUNT(*) " +
+                "FROM SYS.TABLES";
 
             try
             {
@@ -34,7 +34,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -42,11 +42,11 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> tablesNames = new List<string>();
 
-            string query = "SELECT TABLE_NAME " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT TABLE_NAME " +
                 "FROM INFORMATION_SCHEMA.TABLES " +
                 "WHERE TABLE_TYPE = 'BASE TABLE'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -66,16 +66,16 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetTablesFullInfo()
         {
-            string query = "SELECT * " +
-                "FROM SYS.TABLES";
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+            command.CommandText = "SELECT * " +
+                "FROM SYS.TABLES";
 
             try
             {
@@ -94,16 +94,16 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<int> GetNumberOfStoredProcedures()
         {
-            string query = "SELECT COUNT(*) " +
-                "FROM SYS.PROCEDURES";
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+            command.CommandText = "SELECT COUNT(*) " +
+                "FROM SYS.PROCEDURES";
 
             try
             {
@@ -115,7 +115,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -123,10 +123,10 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> storedProceduresNames = new List<string>();
 
-            string query = "SELECT NAME " +
-                "FROM SYS.PROCEDURES";
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+            command.CommandText = "SELECT NAME " +
+                "FROM SYS.PROCEDURES";
 
             try
             {
@@ -146,16 +146,16 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            string query = "SELECT * " +
-                "FROM SYS.PROCEDURES";
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+            command.CommandText = "SELECT * " +
+                "FROM SYS.PROCEDURES";
 
             try
             {
@@ -174,19 +174,19 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<int> GetNumberOfScalarFunctions()
         {
-            string query = "SELECT COUNT(*)  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%scalar_function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -198,7 +198,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -206,13 +206,13 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> functionsNames = new List<string>();
 
-            string query = "SELECT NAME  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%scalar_function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -232,19 +232,19 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetScalarFunctionsFullInfo()
         {
-            string query = "SELECT *  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT *  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%scalar_function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -263,19 +263,19 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<int> GetNumberOfTableValuedFunctions()
         {
-            string query = "SELECT COUNT(*)  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%table_valued_function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -287,7 +287,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -295,13 +295,13 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> functionsNames = new List<string>();
 
-            string query = "SELECT NAME  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%table_valued_function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -321,19 +321,19 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetTableValuedFunctionsFullInfo()
         {
-            string query = "SELECT *  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT *  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%table_valued_function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -352,19 +352,19 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<int> GetNumberOfFunctions()
         {
-            string query = "SELECT COUNT(*)  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -376,7 +376,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -384,13 +384,13 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> functionsNames = new List<string>();
 
-            string query = "SELECT NAME  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -410,19 +410,19 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetFunctionsFullInfo()
         {
-            string query = "SELECT *  " +
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+
+            command.CommandText = "SELECT *  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%function%'";
-
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -441,7 +441,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 

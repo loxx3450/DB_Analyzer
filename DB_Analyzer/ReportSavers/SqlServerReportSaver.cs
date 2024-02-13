@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DB_Analyzer.ReportSavers.TypesHandler;
 using DB_Analyzer.Exceptions.ReportSaverExceptions;
 using DB_Analyzer.Exceptions.Global;
+using System.Data;
 
 namespace DB_Analyzer.ReportSavers
 {
@@ -97,7 +98,7 @@ namespace DB_Analyzer.ReportSavers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -117,30 +118,87 @@ namespace DB_Analyzer.ReportSavers
 
                         if (!columnExists)
                         {
-                            command.CommandText = $"ALTER TABLE scalar_values ADD {reportItem.Name} {ConvertTypesForSqlServer(TypesHandler.TypesHandler.GetScalarValueType(reportItem.GetValueType()))} NULL";
+                            command.CommandText = $"ALTER TABLE scalar_values ADD {reportItem.Name} {TypesConvertor.TypesConvertor.ConvertTypeForSqlServer(TypesHandler.TypesHandler.GetScalarValueType(reportItem.GetValueType()))} NULL";
+                        
+                            await command.ExecuteNonQueryAsync();
+
+                            command.CommandText = $"INSERT INTO scalar_values_types(scalar_value_name, type_name) VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetScalarValueType(reportItem.GetValueType())}')";
+
+                            await command.ExecuteNonQueryAsync();
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        
-                        ;
+                        await command.DisposeAsync();
+
+                        throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
+                    }
+                }
+                else if (reportItem.Value.GetType() != typeof(DataTable))
+                {
+                    command.CommandText = $"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'reference_values' AND COLUMN_NAME = '{reportItem.Name}'";
+
+                    try
+                    {
+                        bool columnExists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+
+                        if (!columnExists)
+                        {
+                            command.CommandText = $"ALTER TABLE reference_values ADD {reportItem.Name} NVARCHAR(MAX) NULL";
+
+                            await command.ExecuteNonQueryAsync();
+
+                            command.CommandText = $"INSERT INTO reference_values_types(reference_value_name, type_name) VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetReferenceType(reportItem.GetValueType())}')";
+
+                            await command.ExecuteNonQueryAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await command.DisposeAsync();
+
+                        throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
+                    }
+                }
+                else
+                {
+                    command.CommandText = $"SELECT 1 FROM sys.tables WHERE name = '{reportItem.Name}'";
+
+                    try
+                    {
+                        bool tableExists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+
+                        if (!tableExists)
+                        {
+                            string query = $"   CREATE TABLE {reportItem.Name} (" +
+                                "id INT PRIMARY KEY IDENTITY(1,1),";
+
+                            DataTable dt = (DataTable)reportItem.Value;
+
+                            foreach (DataColumn column in dt.Columns) 
+                            {
+                                query += $"{column.ColumnName} {TypesConvertor.TypesConvertor.ConvertTypeForSqlServer(column.DataType.Name.ToLower())} NULL, ";
+                            }
+
+                            query += "        report_id INT NOT NULL," +
+                                        $"        CONSTRAINT FK_{reportItem.Name}_report_id FOREIGN KEY (report_id) REFERENCES reports(id)" +
+                                        "    )";
+
+                            command.CommandText = query;
+
+                            await command.ExecuteNonQueryAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await command.DisposeAsync();
+
+                        throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
                     }
                 }
             }
 
-            command.Dispose();
-        }
-
-        string ConvertTypesForSqlServer(string dataType)
-        {
-            return dataType switch
-            {
-                "string" => "nvarchar(max)",
-                "int32" => "int",
-                "boolean" => "bit",
-                "byte" => "smallint",
-                _ => dataType
-            };
+            await command.DisposeAsync();
         }
 
         ~SqlServerReportSaver()

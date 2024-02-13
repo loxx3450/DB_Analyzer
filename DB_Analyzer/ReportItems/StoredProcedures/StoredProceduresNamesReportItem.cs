@@ -10,7 +10,7 @@ namespace DB_Analyzer.ReportItems.StoredProcedures
 {
     public class StoredProceduresNamesReportItem : ReportItem<List<string>>, ISqlServerReportItem, IMySqlReportItem
     {
-        public override string Name { get; } = "storedProceduresNames";
+        public override string Name { get; } = "stored_procedures_names";
         public override List<string> Value { get; protected set; }
 
         public async override Task Run(DbAnalyzer analyzer)

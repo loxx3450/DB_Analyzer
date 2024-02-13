@@ -18,12 +18,12 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<int> GetNumberOfTables()
         {
-            string query = $"SELECT COUNT(*) " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT COUNT(*) " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA = '{ Connection.Database }' " +
                 $"  AND TABLE_TYPE='BASE TABLE';";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -35,7 +35,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -43,12 +43,12 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> tablesNames = new List<string>();
 
-            string query = $"SELECT TABLE_NAME " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT TABLE_NAME " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
                 $"  AND TABLE_TYPE = 'BASE TABLE';";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -68,18 +68,18 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetTablesFullInfo()
         {
-            string query = $"SELECT * " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT * " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA = '{Connection.Database}' " +
                 $"  AND TABLE_TYPE='BASE TABLE';";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -98,18 +98,18 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<int> GetNumberOfStoredProcedures()
         {
-            string query = $"SELECT COUNT(ROUTINE_NAME) " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT COUNT(ROUTINE_NAME) " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
                 $"  AND ROUTINE_SCHEMA=\"{ Connection.Database }\";";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -121,7 +121,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -129,12 +129,12 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> storedProceduresNames = new List<string>();
 
-            string query = $"SELECT ROUTINE_NAME " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT ROUTINE_NAME " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -154,18 +154,18 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            string query = $"SELECT * " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT * " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -184,7 +184,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -220,12 +220,12 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<int> GetNumberOfFunctions()
         {
-            string query = $"SELECT COUNT(ROUTINE_NAME) " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT COUNT(ROUTINE_NAME) " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -237,7 +237,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
@@ -245,12 +245,12 @@ namespace DB_Analyzer.Analyzers
         {
             List<string> storedProceduresNames = new List<string>();
 
-            string query = $"SELECT ROUTINE_NAME " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT ROUTINE_NAME " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -270,18 +270,18 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
 
         public async override Task<DataTable> GetFunctionsFullInfo()
         {
-            string query = $"SELECT * " +
+            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
+
+            command.CommandText = $"SELECT * " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -300,7 +300,7 @@ namespace DB_Analyzer.Analyzers
             }
             finally
             {
-                command.Dispose();
+                await command.DisposeAsync();
             }
         }
         //temp

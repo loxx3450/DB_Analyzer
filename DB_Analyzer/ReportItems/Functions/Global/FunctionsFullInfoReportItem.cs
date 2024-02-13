@@ -11,7 +11,7 @@ namespace DB_Analyzer.ReportItems.Functions.Global
 {
     public class FunctionsFullInfoReportItem : ReportItem<DataTable>, ISqlServerReportItem, IMySqlReportItem
     {
-        public override string Name { get; } = "functionsFullInfo";
+        public override string Name { get; } = "functions_full_info";
         public override DataTable Value { get; protected set; }
 
         public async override Task Run(DbAnalyzer analyzer)
