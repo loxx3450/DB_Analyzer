@@ -1,6 +1,7 @@
 ﻿using DB_Analyzer.Analyzers;
 using DB_Analyzer.Helpers.ReportItemsListsCreators;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportSavers;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -25,13 +26,14 @@ namespace DB_Analyzer.Managers
 
         public abstract Task ConnectToDBAsync();
         public abstract Task Analyze(List<IReportItem<object>> reportItems);
+        public abstract Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems);
         public abstract List<IReportItem<object>> GetAllPossibleReportItems();
 
-        ~Manager() 
+        ~Manager()
         {
             try
             {
-                Connection.CloseAsync();
+                Connection.Close();
             }
             catch (Exception)
             {

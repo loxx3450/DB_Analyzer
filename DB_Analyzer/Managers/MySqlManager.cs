@@ -2,6 +2,7 @@
 using DB_Analyzer.Helpers;
 using DB_Analyzer.Helpers.ReportItemsListsCreators;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportSavers;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System;
@@ -43,6 +44,11 @@ namespace DB_Analyzer.Managers
         public override List<IReportItem<object>> GetAllPossibleReportItems()
         {
             return ReportItemsListCreator.GetAllPossibleReportItems();
+        }
+
+        public async override Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems)
+        {
+            await reportSaver.SaveReport();
         }
     }
 }

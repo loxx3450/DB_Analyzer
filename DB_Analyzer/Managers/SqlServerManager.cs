@@ -1,6 +1,7 @@
 ﻿using DB_Analyzer.Analyzers;
 using DB_Analyzer.Helpers.ReportItemsListsCreators;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportSavers;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System;
@@ -38,6 +39,13 @@ namespace DB_Analyzer.Managers
 
             foreach (var reportItem in reportItems)
                 await reportItem.Run(Analyzer);
+        }
+
+        public async override Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems)
+        {
+            //await Connection.CloseAsync();
+
+            await reportSaver.SaveReport();
         }
 
         public override List<IReportItem<object>> GetAllPossibleReportItems()
