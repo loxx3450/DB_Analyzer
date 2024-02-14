@@ -3,6 +3,7 @@ using DB_Analyzer.ReportItems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,11 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
         public static bool IsScalarValueType(Type type)
         {
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ScalarValue<>);
+        }
+
+        public static string GetDataColumnValueType(DataColumn column)
+        {
+            return column.DataType.Name.ToLower();
         }
     }
 }
