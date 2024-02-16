@@ -9,6 +9,7 @@ namespace DB_Analyzer.Exceptions.ReportSaverExceptions
     public class SqlServerReportSaverException : ReportSaverException
     {
         public static string problemDuringProvidingStructure = "Something went wrong during providing the structure... ";
+        public static string problemDuringInsertingData = "Something went wrong during inserting the data of report... ";
 
         public SqlServerReportSaverException() { }
 

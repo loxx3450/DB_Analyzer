@@ -31,8 +31,7 @@ namespace DB_Analyzer.Helpers.ReportItemsListsCreators
             new ScalarFunctionsFullInfoReportItem(),
             new NumberOfTableValuedFunctionsReportItem(),
             new TableValuedFunctionsNamesReportItem(),
-            new TableValuedFunctionsFullInfoReportItem(),
-            new GetBoolReportItem(),
+            new TableValuedFunctionsFullInfoReportItem()
         };
 
         public abstract List<IReportItem<object>> GetAllPossibleReportItems();

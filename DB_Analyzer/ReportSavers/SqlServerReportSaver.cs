@@ -10,6 +10,9 @@ using DB_Analyzer.Exceptions.ReportSaverExceptions;
 using DB_Analyzer.Exceptions.Global;
 using System.Data;
 using DB_Analyzer.ReportSavers.StructureProviders;
+using DB_Analyzer.ReportSavers.DataInserters;
+using DB_Analyzer.ReportSavers.DataInserters.DbDataInserters;
+using DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders;
 
 namespace DB_Analyzer.ReportSavers
 {
@@ -17,11 +20,13 @@ namespace DB_Analyzer.ReportSavers
     {
         private SqlConnection Connection { get; set; }
 
-        public SqlServerReportSaver(string connectionString)
+        public SqlServerReportSaver(string connectionString, string analyzedDB_Name)
         {
             Connection = new SqlConnection(connectionString);
 
             StructureProvider = new SqlServerStructureProvider(Connection);
+
+            DataInserter = new SqlServerDataInserter(Connection, analyzedDB_Name);
         }
 
         private async Task OpenDBAsync()
@@ -41,6 +46,8 @@ namespace DB_Analyzer.ReportSavers
             await OpenDBAsync();
 
             await StructureProvider.ProvideStructure(reportItems);
+
+            await DataInserter.InsertData(reportItems);
         }
         
         ~SqlServerReportSaver()

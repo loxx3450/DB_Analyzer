@@ -1,5 +1,6 @@
 ﻿using DB_Analyzer.Exceptions.ReportSaverExceptions;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportSavers.TypesConvertors;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -8,24 +9,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportSavers.StructureProviders
+namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 {
-    internal class SqlServerStructureProvider : StructureProvider
+    internal class SqlServerStructureProvider : DbStructureProvider
     {
-        protected SqlConnection Connection { get; set; }
-        public SqlServerStructureProvider(SqlConnection connection) 
-        { 
-            Connection = connection;
-        }
-
-        public override async Task ProvideStructure(List<IReportItem<object>> reportItems)
+        public SqlServerStructureProvider(SqlConnection connection) : base(connection)
         {
-            await ProvideDefaultStructure();
-
-            await ProvideExtendedStructure(reportItems);
+            TypesConvertor = new SqlServerTypesConvertor();
         }
 
-        private async Task ProvideDefaultStructure()
+        protected override async Task ProvideDefaultStructure()
         {
             await CreateTableIfNotExists("reports",
                 "id INT PRIMARY KEY IDENTITY(1,1), " +
@@ -55,7 +48,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
 
         private async Task CreateTableIfNotExists(string dbName, string parameters)
         {
-            SqlCommand command = new SqlCommand() { Connection = Connection };
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
             command.CommandText = $"SELECT 1 FROM sys.tables WHERE name = '{dbName}'";
 
@@ -80,28 +73,9 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
             }
         }
 
-        private async Task ProvideExtendedStructure(List<IReportItem<object>> reportItems)
+        protected override async Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem)
         {
-            foreach (var reportItem in reportItems)
-            {
-                if (TypesHandler.TypesHandler.IsScalarValueType(reportItem.GetValueType()))
-                {
-                    await ProvideExtendedStructureForScalarValue(reportItem);
-                }
-                else if (reportItem.Value.GetType() != typeof(DataTable))
-                {
-                    await ProvideExtendedStructureForReferenceValue(reportItem);
-                }
-                else
-                {
-                    await ProvideExtendedStructureForDataTable(reportItem);
-                }
-            }
-        }
-
-        private async Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem)
-        {
-            SqlCommand command = new SqlCommand() { Connection = Connection };
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
             command.CommandText = $"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'reference_values' AND COLUMN_NAME = '{reportItem.Name}'";
 
@@ -116,7 +90,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
                     await command.ExecuteNonQueryAsync();
 
 
-                    command.CommandText = $"INSERT INTO reference_values_types(reference_value_name, type_name) VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetReferenceType(reportItem.GetValueType())}')";
+                    command.CommandText = $"INSERT INTO reference_values_types(reference_value_name, type_name) VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetReferenceValueType(reportItem.GetValueType())}')";
 
                     await command.ExecuteNonQueryAsync();
                 }
@@ -131,9 +105,9 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
             }
         }
 
-        private async Task ProvideExtendedStructureForScalarValue(IReportItem<object> reportItem)
+        protected override async Task ProvideExtendedStructureForScalarValue(IReportItem<object> reportItem)
         {
-            SqlCommand command = new SqlCommand() { Connection = Connection };
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
             command.CommandText = $"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'scalar_values' AND COLUMN_NAME = '{reportItem.Name}'";
 
@@ -143,7 +117,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
 
                 if (!columnExists)
                 {
-                    command.CommandText = $"ALTER TABLE scalar_values ADD {reportItem.Name} {TypesConvertor.TypesConvertor.ConvertTypeForSqlServer(TypesHandler.TypesHandler.GetScalarValueType(reportItem.GetValueType()))} NULL";
+                    command.CommandText = $"ALTER TABLE scalar_values ADD {reportItem.Name} {TypesConvertor.ConvertType(TypesHandler.TypesHandler.GetScalarValueType(reportItem.GetValueType()))} NULL";
 
                     await command.ExecuteNonQueryAsync();
 
@@ -163,9 +137,9 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
             }
         }
 
-        private async Task ProvideExtendedStructureForDataTable(IReportItem<object> reportItem)
+        protected override async Task ProvideExtendedStructureForDataTable(IReportItem<object> reportItem)
         {
-            SqlCommand command = new SqlCommand() { Connection = Connection };
+            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
 
             command.CommandText = $"SELECT 1 FROM sys.tables WHERE name = '{reportItem.Name}'";
 
@@ -182,7 +156,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
 
                     foreach (DataColumn column in dt.Columns)
                     {
-                        query += $"{column.ColumnName} {TypesConvertor.TypesConvertor.ConvertTypeForSqlServer(TypesHandler.TypesHandler.GetDataColumnValueType(column))} NULL, ";
+                        query += $"{column.ColumnName} {TypesConvertor.ConvertType(TypesHandler.TypesHandler.GetDataColumnValueType(column))} NULL, ";
                     }
 
                     query += "        report_id INT NOT NULL," +

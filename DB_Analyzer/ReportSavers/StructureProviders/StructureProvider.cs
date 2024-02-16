@@ -1,4 +1,5 @@
 ﻿using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportSavers.TypesConvertors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
 {
     internal abstract class StructureProvider
     {
+        protected TypesConvertor TypesConvertor { get; set; }
         public abstract Task ProvideStructure(List<IReportItem<object>> reportItems);
     }
 }

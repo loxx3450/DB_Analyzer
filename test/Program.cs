@@ -21,8 +21,7 @@ using static System.Net.Mime.MediaTypeNames;
 //string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
 //MySqlManager manager = new(connString);
 
-//string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
-string connString = @"Server=(localdb)\MSSQLLocalDB;Database=test;Trusted_Connection=True;Encrypt=False";
+string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False";
 SqlServerManager manager = new(connString);
 
 
@@ -66,7 +65,7 @@ await manager.Analyze(reportItems);
 //    }
 //}
 
-await manager.SaveReport(new SqlServerReportSaver(@"Server = (localdb)\MSSQLLocalDB; Database = s; Trusted_Connection = True; Encrypt = False"), reportItems);
+await manager.SaveReport(new SqlServerReportSaver(@"Server = (localdb)\MSSQLLocalDB; Database = s; Trusted_Connection = True; Encrypt = False", manager.Connection.Database), reportItems);
 
 #endregion
 

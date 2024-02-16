@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportSavers.TypesConvertor
+namespace DB_Analyzer.ReportSavers.TypesConvertors
 {
-    internal static class TypesConvertor
+    internal class SqlServerTypesConvertor : TypesConvertor
     {
-        public static string ConvertTypeForSqlServer(string dataType)
+        public override string ConvertType(string dataType)
         {
             return dataType switch
             {
