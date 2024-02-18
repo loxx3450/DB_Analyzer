@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders
+namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 {
     internal abstract class DbStructureProvider : IStructureProvider
     {
@@ -31,6 +31,8 @@ namespace DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders
 
         protected abstract Task ProvideDefaultStructure();
 
+        protected abstract Task CreateTableIfNotExists(string dbName, string parameters);
+
         private async Task ProvideExtendedStructure(List<IReportItem<object>> reportItems)
         {
             foreach (var reportItem in reportItems)
@@ -50,9 +52,9 @@ namespace DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders
             }
         }
 
-        protected abstract Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem);
-
         protected abstract Task ProvideExtendedStructureForScalarValue(IReportItem<object> reportItem);
+
+        protected abstract Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem);
 
         protected abstract Task ProvideExtendedStructureForDataTable(IReportItem<object> reportItem);
 

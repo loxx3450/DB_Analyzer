@@ -1,5 +1,7 @@
 ﻿using DB_Analyzer.Exceptions.Global;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportSavers.DataInserters;
+using DB_Analyzer.ReportSavers.StructureProviders;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

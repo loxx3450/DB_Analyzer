@@ -11,7 +11,15 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 {
     internal abstract class DbDataInserter : DataInserter
     {
+        //Connection
         protected DbConnection Connection { get; set; }
+
+        //Data for insert
+        protected int ReportID { get; set; }
+
+        //Flags
+        protected bool FirstScalarValue { get; set; }
+        protected bool FirstReferenceValue { get; set; }
 
         public DbDataInserter(DbConnection connection, string analyzedDB_Name) : base(analyzedDB_Name)
         { 
@@ -48,5 +56,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
         protected abstract Task InsertDataForReferenceValue(IReportItem<object> reportItem);
 
         protected abstract Task InsertDataForDataTable(IReportItem<object> reportItem);
+
+        protected abstract Task ExecuteNonQueryAsync(string query);
     }
 }

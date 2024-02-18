@@ -9,10 +9,10 @@ using DB_Analyzer.ReportSavers.TypesHandler;
 using DB_Analyzer.Exceptions.ReportSaverExceptions;
 using DB_Analyzer.Exceptions.Global;
 using System.Data;
-using DB_Analyzer.ReportSavers.IStructureProviders;
+using DB_Analyzer.ReportSavers.StructureProviders;
 using DB_Analyzer.ReportSavers.DataInserters;
 using DB_Analyzer.ReportSavers.DataInserters.DbDataInserters;
-using DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders;
+using DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders;
 
 namespace DB_Analyzer.ReportSavers.DbReportSavers
 {

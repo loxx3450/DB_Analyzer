@@ -9,11 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders
+namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 {
     internal class SqlServerStructureProvider : DbStructureProvider
     {
-        public SqlServerStructureProvider(SqlConnection connection) : base(connection)
+        public SqlServerStructureProvider(SqlConnection connection) 
+            : base(connection)
         {
             TypesConvertor = new SqlServerTypesConvertor();
         }
@@ -46,22 +47,11 @@ namespace DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders
                 "type_name NVARCHAR(MAX) NOT NULL");
         }
 
-        private async Task CreateTableIfNotExists(string dbName, string parameters)
+        protected override async Task CreateTableIfNotExists(string dbName, string parameters)
         {
             if (!await Exists($"SELECT 1 FROM sys.tables WHERE name = '{dbName}'"))
             {
                 await ExecuteNonQueryAsync($"CREATE TABLE {dbName} ({parameters})");
-            }
-        }
-
-        protected override async Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem)
-        {
-            if (!await Exists($"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'reference_values' AND COLUMN_NAME = '{reportItem.Name}'"))
-            {
-                await ExecuteNonQueryAsync($"ALTER TABLE reference_values ADD {reportItem.Name} NVARCHAR(MAX) NULL");
-
-                await ExecuteNonQueryAsync($"INSERT INTO reference_values_types(reference_value_name, type_name) " +
-                    $"VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetReferenceValueType(reportItem.GetValueType())}')");
             }
         }
 
@@ -75,6 +65,17 @@ namespace DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders
 
                 await ExecuteNonQueryAsync($"INSERT INTO scalar_values_types(scalar_value_name, type_name) " +
                     $"VALUES ('{reportItem.Name}', '{type}')");
+            }
+        }
+
+        protected override async Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem)
+        {
+            if (!await Exists($"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'reference_values' AND COLUMN_NAME = '{reportItem.Name}'"))
+            {
+                await ExecuteNonQueryAsync($"ALTER TABLE reference_values ADD {reportItem.Name} NVARCHAR(MAX) NULL");
+
+                await ExecuteNonQueryAsync($"INSERT INTO reference_values_types(reference_value_name, type_name) " +
+                    $"VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetReferenceValueType(reportItem.GetValueType())}')");
             }
         }
 

@@ -1,28 +1,30 @@
 ﻿using DB_Analyzer.Exceptions.ReportSaverExceptions;
 using DB_Analyzer.ReportItems;
-using DB_Analyzer.ReportSavers.DataConvertors;
+using DB_Analyzer.ReportSavers.DataInserters.DbDataInserters;
+using DB_Analyzer.ReportSavers.Supporting_Classes.DataConvertors;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
+namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInserters
 {
-    internal class SqlServerDataInserter : DbDataInserter
+    internal class MySqlDataInserter : DbDataInserter
     {
-        public SqlServerDataInserter(SqlConnection connection, string analyzedDB_Name)
+        public MySqlDataInserter(MySqlConnection connection, string analyzedDB_Name) 
             : base(connection, analyzedDB_Name)
         {
-            DataConvertor = new SqlServerDataConvertor();
+            DataConvertor = new MySqlDataConvertor();
         }
 
         protected override async Task InsertDataForReport()
         {
-            await ExecuteNonQueryAsync($"INSERT INTO reports (db_name, creation_date) VALUES ('{AnalyzedDB_Name}', GETDATE())");
+            await ExecuteNonQueryAsync($"INSERT INTO reports (db_name, creation_date) VALUES ('{AnalyzedDB_Name}', CURRENT_TIMESTAMP)");
 
             ReportID = await GetReportID();
 
@@ -32,7 +34,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         protected override async Task<int> GetReportID()
         {
-            SqlCommand command = new SqlCommand("SELECT MAX(id) FROM reports", (SqlConnection)Connection);
+            MySqlCommand command = new MySqlCommand("SELECT MAX(id) FROM reports", (MySqlConnection)Connection);
 
             try
             {
@@ -40,7 +42,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             }
             catch (Exception ex)
             {
-                throw new SqlServerReportSaverException("Something went wrong during reading inserted data of report... " + ex.Message, ex);
+                throw new MySqlReportSaverException("Something went wrong during reading inserted data of report... " + ex.Message, ex);
             }
             finally
             {
@@ -93,8 +95,11 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             DataTable dataTable = (DataTable)reportItem.Value;
 
 
+            if (dataTable.Rows.Count == 0)
+                return;
+
             bool firstColumn = true;
-            
+
             foreach (DataColumn column in dataTable.Columns)
             {
                 if (!firstColumn)
@@ -128,7 +133,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         protected override async Task ExecuteNonQueryAsync(string query)
         {
-            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
+            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -136,7 +141,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             }
             catch (Exception ex)
             {
-                throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringInsertingData + ex.Message, ex);
+                throw new MySqlReportSaverException(MySqlReportSaverException.problemDuringInsertingData + ex.Message, ex);
             }
             finally
             {
