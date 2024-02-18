@@ -1,6 +1,6 @@
 ﻿using DB_Analyzer.Analyzers;
 using DB_Analyzer.Exceptions.Global;
-using DB_Analyzer.Helpers.ReportItemsListsCreators;
+using DB_Analyzer.Helpers.ReportItemsListsCreator;
 using DB_Analyzer.ReportItems;
 using DB_Analyzer.ReportSavers;
 using System;
@@ -18,16 +18,34 @@ namespace DB_Analyzer.Managers
         public string ConnectionString { get; set; }
         protected DbAnalyzer Analyzer { get; set; }
         internal ReportItemsListCreator ReportItemsListCreator { get; set; }
+
         public Manager(string connectionString, DbConnection connection) 
         { 
             ConnectionString = connectionString;
 
             Connection = connection;
+
+            ReportItemsListCreator = new ReportItemsListCreator();
         }
 
-        public abstract Task ConnectToDBAsync();
+        public async Task ConnectToDBAsync()
+        {
+            try
+            {
+                await Connection.OpenAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ConnectionException(ConnectionException.unableToOpenConnection + ex.Message, ex);
+            }
+        }
+
+        public async Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems)
+        {
+            await reportSaver.SaveReport(reportItems);
+        }
+
         public abstract Task Analyze(List<IReportItem<object>> reportItems);
-        public abstract Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems);
         public abstract List<IReportItem<object>> GetAllPossibleReportItems();
 
         ~Manager()

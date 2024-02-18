@@ -11,7 +11,6 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 {
     internal abstract class DbDataInserter : DataInserter
     {
-        //Connection
         protected DbConnection Connection { get; set; }
 
         public DbDataInserter(DbConnection connection, string analyzedDB_Name) : base(analyzedDB_Name)

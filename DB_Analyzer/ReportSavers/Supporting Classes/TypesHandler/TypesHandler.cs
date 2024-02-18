@@ -12,21 +12,9 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
 {
     internal static class TypesHandler
     {
-        public static string GetReferenceValueType(Type type)
-        {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>) && type.GetGenericArguments()[0] == typeof(string)) { return "List<string>"; }
-
-            throw new TypesHandlerException("Unknown data type...", new ArgumentException());
-        }
-
-        public static bool IsReferenceValueType(Type type)
-        {
-            return !IsDataTableValueType(type) && !IsScalarValueType(type);
-        }
-
         public static string GetScalarValueType(Type type)
         {
-            if (!TypesHandler.IsScalarValueType(type))
+            if (!IsScalarValueType(type))
             {
                 throw new TypesHandlerException("Invalid argument by TypesHandler", new ArgumentException());
             }
@@ -34,14 +22,26 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             return type.GenericTypeArguments[0].Name.ToLower();
         }
 
-        public static bool IsScalarValueType(Type type)
+        public static string GetReferenceValueType(Type type)
         {
-            return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ScalarValue<>)) || (type.IsValueType && !type.IsEnum);
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>) && type.GetGenericArguments()[0] == typeof(string)) { return "List<string>"; }
+
+            throw new TypesHandlerException("Unknown data type...", new ArgumentException());
         }
 
         public static string GetDataColumnValueType(DataColumn column)
         {
             return column.DataType.Name.ToLower();
+        }
+
+        public static bool IsScalarValueType(Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ScalarValue<>);
+        }
+
+        public static bool IsReferenceValueType(Type type)
+        {
+            return !IsDataTableValueType(type) && !IsScalarValueType(type);
         }
 
         public static bool IsDataTableValueType(Type type)

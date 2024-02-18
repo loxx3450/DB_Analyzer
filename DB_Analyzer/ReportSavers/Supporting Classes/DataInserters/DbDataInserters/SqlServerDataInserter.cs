@@ -80,12 +80,12 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             if (FirstScalarValue)
             {
                 command.CommandText = $"INSERT INTO scalar_values ({reportItem.Name}, report_id) " +
-                    $"VALUES ({DataConvertor.ConvertData(reportItem.Value, reportItem.GetValueType())}, {ReportID})";
+                    $"VALUES ({DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())}, {ReportID})";
             }
             else
             {
                 command.CommandText = $"UPDATE scalar_values " +
-                    $"SET {reportItem.Name} = {DataConvertor.ConvertData(reportItem.Value, reportItem.GetValueType())} " +
+                    $"SET {reportItem.Name} = {DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())} " +
                     $"WHERE report_id = {ReportID}";
             }
 
@@ -112,12 +112,12 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             if (FirstReferenceValue)
             {
                 command.CommandText = $"INSERT INTO reference_values ({reportItem.Name}, report_id) " +
-                    $"VALUES ('{DataConvertor.ConvertData(reportItem.Value, reportItem.GetValueType())}', {ReportID})";
+                    $"VALUES ('{DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())}', {ReportID})";
             }
             else
             {
                 command.CommandText = $"UPDATE reference_values " +
-                    $"SET {reportItem.Name} = '{DataConvertor.ConvertData(reportItem.Value, reportItem.GetValueType())}' " +
+                    $"SET {reportItem.Name} = '{DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())}' " +
                     $"WHERE report_id = {ReportID}";
             }
 

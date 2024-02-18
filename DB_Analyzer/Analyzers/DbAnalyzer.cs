@@ -47,5 +47,11 @@ namespace DB_Analyzer.Analyzers
         public abstract Task<List<string>> GetFunctionsNames();
 
         public abstract Task<DataTable> GetFunctionsFullInfo();
+
+        protected abstract Task<int> GetIntValueAsync(string query);
+
+        protected abstract Task<List<string>> GetListOfStringValuesAsync(string query, string column);
+
+        protected abstract Task<DataTable> GetTableOfValuesAsync(string query);
     }
 }

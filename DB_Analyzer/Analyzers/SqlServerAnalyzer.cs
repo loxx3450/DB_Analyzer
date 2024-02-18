@@ -19,356 +19,129 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<int> GetNumberOfTables()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT COUNT(*) " +
-                "FROM SYS.TABLES";
-
-            try
-            {
-                return (int)await command.ExecuteScalarAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+            return await GetIntValueAsync("SELECT COUNT(*) " +
+                "FROM SYS.TABLES");
         }
 
         public async override Task<List<string>> GetTablesNames()
         {
-            List<string> tablesNames = new List<string>();
-
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT TABLE_NAME " +
+            return await GetListOfStringValuesAsync("SELECT TABLE_NAME " +
                 "FROM INFORMATION_SCHEMA.TABLES " +
-                "WHERE TABLE_TYPE = 'BASE TABLE'";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    while (reader.Read()) 
-                    {
-                        tablesNames.Add(reader.GetFieldValue<string>("table_name"));
-                    }
-
-                    return tablesNames;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                "WHERE TABLE_TYPE = 'BASE TABLE'", "TABLE_NAME");
         }
 
         public async override Task<DataTable> GetTablesFullInfo()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT * " +
-                "FROM SYS.TABLES";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    DataTable dataTable = new DataTable();
-
-                    dataTable.Load(reader);
-
-                    return dataTable;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+            return await GetTableOfValuesAsync("SELECT * " +
+                "FROM SYS.TABLES");
         }
 
         public async override Task<int> GetNumberOfStoredProcedures()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT COUNT(*) " +
-                "FROM SYS.PROCEDURES";
-
-            try
-            {
-                return (int)await command.ExecuteScalarAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+            return await GetIntValueAsync("SELECT COUNT(*) " +
+                "FROM SYS.PROCEDURES");
         }
 
         public async override Task<List<string>> GetStoredProceduresNames()
         {
-            List<string> storedProceduresNames = new List<string>();
-
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT NAME " +
-                "FROM SYS.PROCEDURES";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    while (reader.Read())
-                    {
-                        storedProceduresNames.Add(reader.GetFieldValue<string>("NAME"));
-                    }
-
-                    return storedProceduresNames;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+            return await GetListOfStringValuesAsync("SELECT NAME " +
+                "FROM SYS.PROCEDURES", "NAME");
         }
 
         public async override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT * " +
-                "FROM SYS.PROCEDURES";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    DataTable dataTable = new DataTable();
-
-                    dataTable.Load(reader);
-
-                    return dataTable;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+            return await GetTableOfValuesAsync("SELECT * " +
+                "FROM SYS.PROCEDURES");
         }
 
         public async override Task<int> GetNumberOfScalarFunctions()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT COUNT(*)  " +
+            return await GetIntValueAsync("SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%scalar_function%'";
-
-            try
-            {
-                return (int)(await command.ExecuteScalarAsync());
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                "WHERE TYPE_DESC LIKE '%scalar_function%'");
         }
 
         public async override Task<List<string>> GetScalarFunctionsNames()
         {
-            List<string> functionsNames = new List<string>();
-
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT NAME  " +
+            return await GetListOfStringValuesAsync("SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%scalar_function%'";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    while (reader.Read())
-                    {
-                        functionsNames.Add(reader.GetFieldValue<string>("NAME"));
-                    }
-
-                    return functionsNames;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                "WHERE TYPE_DESC LIKE '%scalar_function%'", "NAME");
         }
 
         public async override Task<DataTable> GetScalarFunctionsFullInfo()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT *  " +
+            return await GetTableOfValuesAsync("SELECT *  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%scalar_function%'";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    DataTable dataTable = new DataTable();
-
-                    dataTable.Load(reader);
-
-                    return dataTable;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                "WHERE TYPE_DESC LIKE '%scalar_function%'");
         }
 
         public async override Task<int> GetNumberOfTableValuedFunctions()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT COUNT(*)  " +
+            return await GetIntValueAsync("SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%table_valued_function%'";
-
-            try
-            {
-                return (int)(await command.ExecuteScalarAsync());
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                "WHERE TYPE_DESC LIKE '%table_valued_function%'");
         }
 
         public async override Task<List<string>> GetTableValuedFunctionsNames()
         {
-            List<string> functionsNames = new List<string>();
-
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT NAME  " +
+            return await GetListOfStringValuesAsync("SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%table_valued_function%'";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    while (reader.Read())
-                    {
-                        functionsNames.Add(reader.GetFieldValue<string>("NAME"));
-                    }
-
-                    return functionsNames;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                "WHERE TYPE_DESC LIKE '%table_valued_function%'", "NAME");
         }
 
         public async override Task<DataTable> GetTableValuedFunctionsFullInfo()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT *  " +
+            return await GetTableOfValuesAsync("SELECT *  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%table_valued_function%'";
-
-            try
-            {
-                using SqlDataReader reader = await command.ExecuteReaderAsync();
-                {
-                    DataTable dataTable = new DataTable();
-
-                    dataTable.Load(reader);
-
-                    return dataTable;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                "WHERE TYPE_DESC LIKE '%table_valued_function%'");
         }
 
         public async override Task<int> GetNumberOfFunctions()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT COUNT(*)  " +
+            return await GetIntValueAsync("SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%function%'";
+                "WHERE TYPE_DESC LIKE '%function%'");
+        }
+
+        public async override Task<List<string>> GetFunctionsNames()
+        {
+            return await GetListOfStringValuesAsync("SELECT NAME  " +
+                "FROM SYS.SQL_MODULES M " +
+                "INNER JOIN SYS.OBJECTS OBJ " +
+                "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
+                "WHERE TYPE_DESC LIKE '%function%'", "NAME");
+        }
+
+        public async override Task<DataTable> GetFunctionsFullInfo()
+        {
+            return await GetTableOfValuesAsync("SELECT *  " +
+                "FROM SYS.SQL_MODULES M " +
+                "INNER JOIN SYS.OBJECTS OBJ " +
+                "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
+                "WHERE TYPE_DESC LIKE '%function%'");
+        }
+
+        protected override async Task<int> GetIntValueAsync(string query)
+        {
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
-                return (int)(await command.ExecuteScalarAsync());
+                return Convert.ToInt32(await command.ExecuteScalarAsync());
             }
             catch (Exception ex)
             {
@@ -380,17 +153,11 @@ namespace DB_Analyzer.Analyzers
             }
         }
 
-        public async override Task<List<string>> GetFunctionsNames()
+        protected override async Task<List<string>> GetListOfStringValuesAsync(string query, string column)
         {
-            List<string> functionsNames = new List<string>();
+            List<string> result = new List<string>();
 
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT NAME  " +
-                "FROM SYS.SQL_MODULES M " +
-                "INNER JOIN SYS.OBJECTS OBJ " +
-                "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%function%'";
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {
@@ -398,10 +165,10 @@ namespace DB_Analyzer.Analyzers
                 {
                     while (reader.Read())
                     {
-                        functionsNames.Add(reader.GetFieldValue<string>("NAME"));
+                        result.Add(reader.GetFieldValue<string>(column));
                     }
 
-                    return functionsNames;
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -414,15 +181,9 @@ namespace DB_Analyzer.Analyzers
             }
         }
 
-        public async override Task<DataTable> GetFunctionsFullInfo()
+        protected override async Task<DataTable> GetTableOfValuesAsync(string query)
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = "SELECT *  " +
-                "FROM SYS.SQL_MODULES M " +
-                "INNER JOIN SYS.OBJECTS OBJ " +
-                "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
-                "WHERE TYPE_DESC LIKE '%function%'";
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {

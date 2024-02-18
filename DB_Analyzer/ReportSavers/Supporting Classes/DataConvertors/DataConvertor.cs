@@ -10,8 +10,8 @@ namespace DB_Analyzer.ReportSavers.DataConvertors
 {
     internal abstract class DataConvertor
     {
-        public abstract string ConvertData(object data, Type type);
+        public abstract string ConvertValue(object value, Type type);
 
-        public abstract string ConvertDataTableValue(object data, Type type);
+        public abstract string ConvertDataTableValue(object value, Type type);
     }
 }

@@ -9,40 +9,40 @@ namespace DB_Analyzer.ReportSavers.DataConvertors
 {
     internal class SqlServerDataConvertor : DataConvertor
     {
-        public override string ConvertData(object data, Type type)
+        public override string ConvertValue(object value, Type type)
         {
             if (TypesHandler.TypesHandler.IsReferenceValueType(type))
             {
-                return JsonSerializer.Serialize(data, type);
+                return JsonSerializer.Serialize(value, type);
             }
 
-            string? value = data.ToString();
+            string? data = value.ToString();
 
-            return value switch
+            return data switch
             {
                 "True" => "1",
                 "False" => "0",
                 null => "null",
-                _ => value
+                _ => data
             };
         }
 
-        public override string ConvertDataTableValue(object data, Type type)
+        public override string ConvertDataTableValue(object value, Type type)
         {
             if (type == typeof(DateTime))
             {
-                string newDateString = DateTime.ParseExact(data.ToString(), "dd.MM.yyyy HH:mm:ss", null).ToString("yyyy-MM-dd HH:mm:ss");
+                string newDateString = DateTime.ParseExact(value.ToString(), "dd.MM.yyyy HH:mm:ss", null).ToString("yyyy-MM-dd HH:mm:ss");
                 return $"CONVERT(datetime, '{newDateString}', 120)";
             }
 
-            string? value = data.ToString();
+            string? data = value.ToString();
 
-            return value switch
+            return data switch
             {
                 "True" => "1",
                 "False" => "0",
                 null => "null",
-                _ => $"'{value}'"
+                _ => $"'{data}'"
             };
         }
     }

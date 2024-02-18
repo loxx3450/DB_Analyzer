@@ -1,11 +1,13 @@
 ﻿using DB_Analyzer.Analyzers;
 using DB_Analyzer.Exceptions.Global;
 using DB_Analyzer.Helpers;
-using DB_Analyzer.Helpers.ReportItemsListsCreators;
+using DB_Analyzer.Helpers.ReportItemsListsCreator;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportItems.Flags;
 using DB_Analyzer.ReportSavers;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,21 +20,7 @@ namespace DB_Analyzer.Managers
     {
         public MySqlManager(string connectionString)
             : base(connectionString, new MySqlConnection(connectionString))
-        { 
-            ReportItemsListCreator = new MySqlReportItemsListCreator();
-        }
-
-        public async override Task ConnectToDBAsync()
-        {
-            try
-            {
-                await Connection.OpenAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ConnectionException(ConnectionException.unableToOpenConnection + ex.Message, ex);
-            }
-        }
+        { }
 
         public async override Task Analyze(List<IReportItem<object>> reportItems)
         {
@@ -40,16 +28,20 @@ namespace DB_Analyzer.Managers
 
             foreach (var reportItem in reportItems)
                 await reportItem.Run(Analyzer);
+
+            //List<Task> tasks = new List<Task>();
+
+            //foreach (var reportItem in reportItems)
+            //{
+            //    tasks.Add(Task.Run(() => reportItem.Run(Analyzer)));
+            //}
+
+            //await Task.WhenAll(tasks);
         }
 
         public override List<IReportItem<object>> GetAllPossibleReportItems()
         {
-            return ReportItemsListCreator.GetAllPossibleReportItems();
-        }
-
-        public async override Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems)
-        {
-            await reportSaver.SaveReport(reportItems);
+            return ReportItemsListCreator.GetAllPossibleReportItems<IMySqlReportItem>();
         }
     }
 }

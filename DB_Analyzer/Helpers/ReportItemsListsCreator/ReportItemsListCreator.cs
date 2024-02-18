@@ -11,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.Helpers.ReportItemsListsCreators
+namespace DB_Analyzer.Helpers.ReportItemsListsCreator
 {
-    internal abstract class ReportItemsListCreator
+    internal class ReportItemsListCreator
     {
         protected List<IReportItem<object>> allReportItems = new List<IReportItem<object>>()
         {
@@ -34,6 +34,19 @@ namespace DB_Analyzer.Helpers.ReportItemsListsCreators
             new TableValuedFunctionsFullInfoReportItem()
         };
 
-        public abstract List<IReportItem<object>> GetAllPossibleReportItems();
+        public List<IReportItem<object>> GetAllPossibleReportItems<T>()
+        {
+            List<IReportItem<object>> reportItems = new List<IReportItem<object>>();
+
+            foreach (var item in allReportItems)
+            {
+                if (item is T)
+                {
+                    reportItems.Add(item);
+                }
+            }
+
+            return reportItems;
+        }
     }
 }

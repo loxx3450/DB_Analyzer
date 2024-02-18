@@ -1,5 +1,6 @@
 ﻿using DB_Analyzer.Exceptions.ReportSaverExceptions;
 using DB_Analyzer.ReportItems;
+using DB_Analyzer.ReportSavers.TypesConvertors;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -9,19 +10,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
+namespace DB_Analyzer.ReportSavers.IStructureProviders.DbStructureProviders
 {
-    internal abstract class DbStructureProvider : StructureProvider
+    internal abstract class DbStructureProvider : IStructureProvider
     {
-        //Connection
         protected DbConnection Connection { get; set; }
+        protected TypesConvertor TypesConvertor { get; set; }
 
         public DbStructureProvider(DbConnection connection)
         {
             Connection = connection;
         }
 
-        public override async Task ProvideStructure(List<IReportItem<object>> reportItems)
+        public virtual async Task ProvideStructure(List<IReportItem<object>> reportItems)
         {
             await ProvideDefaultStructure();
 
@@ -54,5 +55,9 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
         protected abstract Task ProvideExtendedStructureForScalarValue(IReportItem<object> reportItem);
 
         protected abstract Task ProvideExtendedStructureForDataTable(IReportItem<object> reportItem);
+
+        protected abstract Task<bool> Exists(string query);
+
+        protected abstract Task ExecuteNonQueryAsync(string query);
     }
 }

@@ -18,174 +18,50 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<int> GetNumberOfTables()
         {
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT COUNT(*) " +
+            return await GetIntValueAsync($"SELECT COUNT(*) " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA = '{ Connection.Database }' " +
-                $"  AND TABLE_TYPE='BASE TABLE';";
-
-            try
-            {
-                return Convert.ToInt32(await command.ExecuteScalarAsync());
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                $"  AND TABLE_TYPE='BASE TABLE';");
         }
 
         public async override Task<List<string>> GetTablesNames()
         {
-            List<string> tablesNames = new List<string>();
-
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT TABLE_NAME " +
+            return await GetListOfStringValuesAsync($"SELECT TABLE_NAME " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
-                $"  AND TABLE_TYPE = 'BASE TABLE';";
-
-            try
-            {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
-                {
-                    while (reader.Read())
-                    {
-                        tablesNames.Add(reader.GetFieldValue<string>("table_name"));
-                    }
-
-                    return tablesNames;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                $"  AND TABLE_TYPE = 'BASE TABLE';", "TABLE_NAME");
         }
 
         public async override Task<DataTable> GetTablesFullInfo()
         {
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT * " +
+            return await GetTableOfValuesAsync($"SELECT * " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA = '{Connection.Database}' " +
-                $"  AND TABLE_TYPE='BASE TABLE';";
-
-            try
-            {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
-                {
-                    DataTable dataTable = new DataTable();
-
-                    dataTable.Load(reader);
-
-                    return dataTable;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                $"  AND TABLE_TYPE='BASE TABLE';");
         }
 
         public async override Task<int> GetNumberOfStoredProcedures()
         {
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT COUNT(ROUTINE_NAME) " +
+            return await GetIntValueAsync($"SELECT COUNT(ROUTINE_NAME) " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
-                $"  AND ROUTINE_SCHEMA=\"{ Connection.Database }\";";
-
-            try
-            {
-                return Convert.ToInt32(await command.ExecuteScalarAsync());
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                $"  AND ROUTINE_SCHEMA=\"{ Connection.Database }\";");
         }
 
         public async override Task<List<string>> GetStoredProceduresNames()
         {
-            List<string> storedProceduresNames = new List<string>();
-
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT ROUTINE_NAME " +
+            return await GetListOfStringValuesAsync($"SELECT ROUTINE_NAME " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
-                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
-
-            try
-            {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
-                {
-                    while (reader.Read())
-                    {
-                        storedProceduresNames.Add(reader.GetFieldValue<string>("ROUTINE_NAME"));
-                    }
-
-                    return storedProceduresNames;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";", "ROUTINE_NAME");
         }
 
         public async override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT * " +
+            return await GetTableOfValuesAsync($"SELECT * " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
-                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
-
-            try
-            {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
-                {
-                    DataTable dataTable = new DataTable();
-
-                    dataTable.Load(reader);
-
-                    return dataTable;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
         }
 
         public override Task<int> GetNumberOfScalarFunctions()
@@ -220,12 +96,31 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<int> GetNumberOfFunctions()
         {
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT COUNT(ROUTINE_NAME) " +
+            return await GetIntValueAsync($"SELECT COUNT(ROUTINE_NAME) " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
-                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
+        }
+
+        public async override Task<List<string>> GetFunctionsNames()
+        {
+            return await GetListOfStringValuesAsync($"SELECT ROUTINE_NAME " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";", "ROUTINE_NAME");
+        }
+
+        public async override Task<DataTable> GetFunctionsFullInfo()
+        {
+            return await GetTableOfValuesAsync($"SELECT * " +
+                $"FROM INFORMATION_SCHEMA.ROUTINES " +
+                $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
+                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
+        }
+
+        protected override async Task<int> GetIntValueAsync(string query)
+        {
+            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -241,16 +136,11 @@ namespace DB_Analyzer.Analyzers
             }
         }
 
-        public async override Task<List<string>> GetFunctionsNames()
+        protected override async Task<List<string>> GetListOfStringValuesAsync(string query, string column)
         {
-            List<string> storedProceduresNames = new List<string>();
+            List<string> result = new List<string>();
 
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT ROUTINE_NAME " +
-                $"FROM INFORMATION_SCHEMA.ROUTINES " +
-                $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
-                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {
@@ -258,10 +148,10 @@ namespace DB_Analyzer.Analyzers
                 {
                     while (reader.Read())
                     {
-                        storedProceduresNames.Add(reader.GetFieldValue<string>("ROUTINE_NAME"));
+                        result.Add(reader.GetFieldValue<string>(column));
                     }
 
-                    return storedProceduresNames;
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -274,14 +164,9 @@ namespace DB_Analyzer.Analyzers
             }
         }
 
-        public async override Task<DataTable> GetFunctionsFullInfo()
+        protected override async Task<DataTable> GetTableOfValuesAsync(string query)
         {
-            MySqlCommand command = new MySqlCommand() { Connection = (MySqlConnection)Connection };
-
-            command.CommandText = $"SELECT * " +
-                $"FROM INFORMATION_SCHEMA.ROUTINES " +
-                $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
-                $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";";
+            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
 
             try
             {

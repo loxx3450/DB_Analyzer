@@ -1,32 +1,22 @@
-﻿using DB_Analyzer.ReportItems;
+﻿using DB_Analyzer.Exceptions.Global;
+using DB_Analyzer.ReportItems;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DB_Analyzer.ReportSavers.TypesHandler;
-using DB_Analyzer.Exceptions.ReportSaverExceptions;
-using DB_Analyzer.Exceptions.Global;
-using System.Data;
-using DB_Analyzer.ReportSavers.StructureProviders;
-using DB_Analyzer.ReportSavers.DataInserters;
-using DB_Analyzer.ReportSavers.DataInserters.DbDataInserters;
-using DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders;
 
-namespace DB_Analyzer.ReportSavers
+namespace DB_Analyzer.ReportSavers.DbReportSavers
 {
-    public class SqlServerReportSaver : ReportSaver
+    public abstract class DbReportSaver : ReportSaver
     {
-        private SqlConnection Connection { get; set; }
+        protected DbConnection Connection { get; set; }
 
-        public SqlServerReportSaver(string connectionString, string analyzedDB_Name)
+        public DbReportSaver(DbConnection connection)
         {
-            Connection = new SqlConnection(connectionString);
-
-            StructureProvider = new SqlServerStructureProvider(Connection);
-
-            DataInserter = new SqlServerDataInserter(Connection, analyzedDB_Name);
+            Connection = connection;
         }
 
         private async Task OpenDBAsync()
@@ -49,8 +39,8 @@ namespace DB_Analyzer.ReportSavers
 
             await DataInserter.InsertData(reportItems);
         }
-        
-        ~SqlServerReportSaver()
+
+        ~DbReportSaver()
         {
             try
             {
