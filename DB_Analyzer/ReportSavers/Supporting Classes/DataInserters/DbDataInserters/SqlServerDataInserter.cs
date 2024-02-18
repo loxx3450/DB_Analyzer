@@ -30,34 +30,17 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         protected override async Task InsertDataForReport()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+            await ExecuteNonQueryAsync($"INSERT INTO reports (db_name, creation_date) VALUES ('{AnalyzedDB_Name}', GETDATE())");
 
-            command.CommandText = $"INSERT INTO reports (db_name, creation_date) VALUES ('{AnalyzedDB_Name}', GETDATE())";
+            ReportID = await GetReportID();
 
-            try
-            {
-                await command.ExecuteNonQueryAsync();
-
-                ReportID = await GetReportID();
-
-                FirstScalarValue = true;
-                FirstReferenceValue = true;
-            }
-            catch (Exception ex)
-            {
-                throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringInsertingData + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+            FirstScalarValue = true;
+            FirstReferenceValue = true;
         }
 
-        private async Task<int> GetReportID()
+        protected override async Task<int> GetReportID()
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
-            command.CommandText = $"SELECT MAX(id) FROM reports";
+            SqlCommand command = new SqlCommand("SELECT MAX(id) FROM reports", (SqlConnection)Connection);
 
             try
             {
@@ -75,75 +58,48 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         protected override async Task InsertDataForScalarValue(IReportItem<object> reportItem)
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+            string value = DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType());
 
             if (FirstScalarValue)
             {
-                command.CommandText = $"INSERT INTO scalar_values ({reportItem.Name}, report_id) " +
-                    $"VALUES ({DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())}, {ReportID})";
-            }
-            else
-            {
-                command.CommandText = $"UPDATE scalar_values " +
-                    $"SET {reportItem.Name} = {DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())} " +
-                    $"WHERE report_id = {ReportID}";
-            }
-
-            try
-            {
-                await command.ExecuteNonQueryAsync();
+                await ExecuteNonQueryAsync($"INSERT INTO scalar_values ({reportItem.Name}, report_id) " +
+                    $"VALUES ({value}, {ReportID})");
 
                 FirstScalarValue = false;
             }
-            catch (Exception ex)
+            else
             {
-                throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringInsertingData + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
+                await ExecuteNonQueryAsync($"UPDATE scalar_values " +
+                    $"SET {reportItem.Name} = {value} " +
+                    $"WHERE report_id = {ReportID}");
             }
         }
 
         protected override async Task InsertDataForReferenceValue(IReportItem<object> reportItem)
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
+            string value = DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType());
 
             if (FirstReferenceValue)
             {
-                command.CommandText = $"INSERT INTO reference_values ({reportItem.Name}, report_id) " +
-                    $"VALUES ('{DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())}', {ReportID})";
-            }
-            else
-            {
-                command.CommandText = $"UPDATE reference_values " +
-                    $"SET {reportItem.Name} = '{DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType())}' " +
-                    $"WHERE report_id = {ReportID}";
-            }
-
-            try
-            {
-                await command.ExecuteNonQueryAsync();
+                await ExecuteNonQueryAsync($"INSERT INTO reference_values ({reportItem.Name}, report_id) " +
+                    $"VALUES ('{value}', {ReportID})");
 
                 FirstReferenceValue = false;
             }
-            catch (Exception ex)
+            else
             {
-                throw new SqlServerReportSaverException(SqlServerReportSaverException.problemDuringInsertingData + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
+                await ExecuteNonQueryAsync($"UPDATE reference_values " +
+                    $"SET {reportItem.Name} = '{value}' " +
+                    $"WHERE report_id = {ReportID}");
             }
         }
 
         protected override async Task InsertDataForDataTable(IReportItem<object> reportItem)
         {
-            SqlCommand command = new SqlCommand() { Connection = (SqlConnection)Connection };
-
             string query = $"INSERT INTO {reportItem.Name} (";
 
             DataTable dataTable = (DataTable)reportItem.Value;
+
 
             bool firstColumn = true;
             
@@ -159,6 +115,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
             query += ", report_id) VALUES (";
 
+
             firstColumn = true;
 
             for (int i = 0; i < dataTable.Columns.Count; ++i)
@@ -173,7 +130,13 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
             query += $", {ReportID})";
 
-            command.CommandText = query;
+
+            await ExecuteNonQueryAsync(query);
+        }
+
+        protected async Task ExecuteNonQueryAsync(string query)
+        {
+            SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);
 
             try
             {

@@ -41,6 +41,8 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         protected abstract Task InsertDataForReport();
 
+        protected abstract Task<int> GetReportID();
+
         protected abstract Task InsertDataForScalarValue(IReportItem<object> reportItem);
 
         protected abstract Task InsertDataForReferenceValue(IReportItem<object> reportItem);
