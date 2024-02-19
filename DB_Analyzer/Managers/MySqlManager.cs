@@ -26,17 +26,13 @@ namespace DB_Analyzer.Managers
         {
             Analyzer = new MySqlAnalyzer((MySqlConnection)Connection);
 
-            foreach (var reportItem in reportItems)
-                await reportItem.Run(Analyzer);
-
-            //List<Task> tasks = new List<Task>();
-
             //foreach (var reportItem in reportItems)
-            //{
-            //    tasks.Add(Task.Run(() => reportItem.Run(Analyzer)));
-            //}
+            //    await reportItem.Run(Analyzer);
 
-            //await Task.WhenAll(tasks);
+            await Parallel.ForEachAsync(reportItems, async (item, state) =>
+            {
+                await item.Run(Analyzer);
+            });
         }
 
         public override List<IReportItem<object>> GetAllPossibleReportItems()

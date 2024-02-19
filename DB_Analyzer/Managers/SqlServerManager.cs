@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,8 +25,13 @@ namespace DB_Analyzer.Managers
         {
             Analyzer = new SqlServerAnalyzer((SqlConnection)Connection);
 
-            foreach (var reportItem in reportItems)
-                await reportItem.Run(Analyzer);
+            //foreach (var reportItem in reportItems)
+            //    await reportItem.Run(Analyzer);
+
+            await Parallel.ForEachAsync(reportItems, async (item, state) =>
+            {
+                await item.Run(Analyzer);
+            });
         }
 
         public override List<IReportItem<object>> GetAllPossibleReportItems()

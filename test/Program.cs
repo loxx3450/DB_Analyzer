@@ -17,11 +17,11 @@ using System.Text.Json;
 
 #region main
 
-string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
-MySqlManager manager = new(connString);
+//string connString = @"Server=127.0.0.1;port=3306;uid=root;Database=portal_db";
+//MySqlManager manager = new(connString);
 
-//string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true";
-//SqlServerManager manager = new(connString);
+string connString = @"Server=(localdb)\MSSQLLocalDB;Database=portal_db;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true";
+SqlServerManager manager = new(connString);
 
 
 
