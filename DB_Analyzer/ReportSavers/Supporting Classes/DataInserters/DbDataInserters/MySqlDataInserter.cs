@@ -95,9 +95,6 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
             DataTable dataTable = (DataTable)reportItem.Value;
 
 
-            if (dataTable.Rows.Count == 0)
-                return;
-
             bool firstColumn = true;
 
             foreach (DataColumn column in dataTable.Columns)

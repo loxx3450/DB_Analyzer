@@ -17,7 +17,5 @@ namespace DB_Analyzer.ReportSavers.DataInserters
         {
             AnalyzedDB_Name = analyzedDB_Name;
         }
-
-        public abstract Task InsertData(List<IReportItem<object>> reportItems);
     }
 }

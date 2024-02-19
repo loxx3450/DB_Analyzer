@@ -26,7 +26,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             Connection = connection;
         }
 
-        public override async Task InsertData(List<IReportItem<object>> reportItems)
+        public async Task InsertData(List<IReportItem<object>> reportItems)
         {
             await InsertDataForReport();
 

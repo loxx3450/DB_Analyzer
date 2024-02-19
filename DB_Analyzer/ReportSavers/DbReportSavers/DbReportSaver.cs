@@ -1,7 +1,9 @@
 ﻿using DB_Analyzer.Exceptions.Global;
 using DB_Analyzer.ReportItems;
 using DB_Analyzer.ReportSavers.DataInserters;
+using DB_Analyzer.ReportSavers.DataInserters.DbDataInserters;
 using DB_Analyzer.ReportSavers.StructureProviders;
+using DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -37,9 +39,9 @@ namespace DB_Analyzer.ReportSavers.DbReportSavers
         {
             await OpenDBAsync();
 
-            await StructureProvider.ProvideStructure(reportItems);
+            await ((DbStructureProvider)StructureProvider).ProvideStructure(reportItems);
 
-            await DataInserter.InsertData(reportItems);
+            await ((DbDataInserter)DataInserter).InsertData(reportItems);
         }
 
         ~DbReportSaver()

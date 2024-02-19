@@ -34,7 +34,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetTablesFullInfo()
         {
-            return await GetTableOfValuesAsync($"SELECT * " +
+            return await GetTableOfValuesAsync($"SELECT TABLE_NAME as name, TABLE_TYPE as type, CREATE_TIME as creation_date " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA = '{Connection.Database}' " +
                 $"  AND TABLE_TYPE='BASE TABLE';");
@@ -58,7 +58,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            return await GetTableOfValuesAsync($"SELECT * " +
+            return await GetTableOfValuesAsync($"SELECT ROUTINE_NAME as name, ROUTINE_TYPE as type, CREATED as creation_date " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
@@ -112,7 +112,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync($"SELECT * " +
+            return await GetTableOfValuesAsync($"SELECT ROUTINE_NAME as name, ROUTINE_TYPE as type, CREATED as creation_date " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");

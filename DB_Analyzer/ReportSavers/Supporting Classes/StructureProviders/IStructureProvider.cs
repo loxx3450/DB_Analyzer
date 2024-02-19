@@ -10,6 +10,6 @@ namespace DB_Analyzer.ReportSavers.StructureProviders
 {
     internal interface IStructureProvider
     {
-        public abstract Task ProvideStructure(List<IReportItem<object>> reportItems);
+
     }
 }

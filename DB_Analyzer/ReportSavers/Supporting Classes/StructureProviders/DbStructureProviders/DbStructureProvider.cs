@@ -22,7 +22,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
             Connection = connection;
         }
 
-        public virtual async Task ProvideStructure(List<IReportItem<object>> reportItems)
+        public async Task ProvideStructure(List<IReportItem<object>> reportItems)
         {
             await ProvideDefaultStructure();
 

@@ -32,7 +32,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetTablesFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT * " +
+            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.TABLES");
         }
 
@@ -50,7 +50,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT * " +
+            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.PROCEDURES");
         }
 
@@ -74,7 +74,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetScalarFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT *  " +
+            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
@@ -101,7 +101,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetTableValuedFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT *  " +
+            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
@@ -128,7 +128,7 @@ namespace DB_Analyzer.Analyzers
 
         public async override Task<DataTable> GetFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT *  " +
+            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
