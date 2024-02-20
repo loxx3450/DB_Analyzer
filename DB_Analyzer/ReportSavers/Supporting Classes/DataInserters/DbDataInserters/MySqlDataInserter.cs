@@ -94,6 +94,8 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
 
             DataTable dataTable = (DataTable)reportItem.Value;
 
+            if (dataTable.Rows.Count == 0)
+                return;
 
             bool firstColumn = true;
 
@@ -107,23 +109,28 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
                 firstColumn = false;
             }
 
-            query += ", report_id) VALUES (";
+            query += ", report_id) VALUES";
 
-
-            firstColumn = true;
-
-            for (int i = 0; i < dataTable.Columns.Count; ++i)
+            foreach (DataRow row in dataTable.Rows)
             {
-                if (!firstColumn)
-                    query += $", ";
+                query += '(';
 
-                query += DataConvertor.ConvertDataTableValue(dataTable.Rows[0][i], dataTable.Columns[i].DataType);
+                firstColumn = true;
 
-                firstColumn = false;
+                for (int i = 0; i < dataTable.Columns.Count; ++i)
+                {
+                    if (!firstColumn)
+                        query += $", ";
+
+                    query += DataConvertor.ConvertDataTableValue(row[i], dataTable.Columns[i].DataType);
+
+                    firstColumn = false;
+                }
+
+                query += $", {ReportID}),";
             }
 
-            query += $", {ReportID})";
-
+            query = query.Remove(query.Length - 1);
 
             await ExecuteNonQueryAsync(query);
         }

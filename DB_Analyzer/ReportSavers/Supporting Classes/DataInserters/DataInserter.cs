@@ -11,7 +11,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters
     internal abstract class DataInserter
     {
         protected string AnalyzedDB_Name { get; set; }
-        protected DataConvertor DataConvertor { get; set; }
+        protected DataConvertor? DataConvertor { get; set; } = null;
 
         public DataInserter(string analyzedDB_Name)
         {
