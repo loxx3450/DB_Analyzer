@@ -16,49 +16,49 @@ namespace DB_Analyzer.Analyzers
             : base(connection)
         { }
 
-        public async override Task<int> GetNumberOfTables()
+        public override Task<int> GetNumberOfTables()
         {
-            return await GetIntValueAsync($"SELECT COUNT(*) " +
+            return GetIntValueAsync($"SELECT COUNT(*) " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA = '{ Connection.Database }' " +
                 $"  AND TABLE_TYPE='BASE TABLE';");
         }
 
-        public async override Task<List<string>> GetTablesNames()
+        public override Task<List<string>> GetTablesNames()
         {
-            return await GetListOfStringValuesAsync($"SELECT TABLE_NAME " +
+            return GetListOfStringValuesAsync($"SELECT TABLE_NAME " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA='{Connection.Database}' " +
                 $"  AND TABLE_TYPE = 'BASE TABLE';", "TABLE_NAME");
         }
 
-        public async override Task<DataTable> GetTablesFullInfo()
+        public override Task<DataTable> GetTablesFullInfo()
         {
-            return await GetTableOfValuesAsync($"SELECT TABLE_NAME as name, TABLE_TYPE as type, CREATE_TIME as creation_date " +
+            return GetTableOfValuesAsync($"SELECT TABLE_NAME as name, TABLE_TYPE as type, CREATE_TIME as creation_date " +
                 $"FROM INFORMATION_SCHEMA.TABLES " +
                 $"WHERE TABLE_SCHEMA = '{Connection.Database}' " +
                 $"  AND TABLE_TYPE='BASE TABLE';");
         }
 
-        public async override Task<int> GetNumberOfStoredProcedures()
+        public override Task<int> GetNumberOfStoredProcedures()
         {
-            return await GetIntValueAsync($"SELECT COUNT(ROUTINE_NAME) " +
+            return GetIntValueAsync($"SELECT COUNT(ROUTINE_NAME) " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
                 $"  AND ROUTINE_SCHEMA=\"{ Connection.Database }\";");
         }
 
-        public async override Task<List<string>> GetStoredProceduresNames()
+        public override Task<List<string>> GetStoredProceduresNames()
         {
-            return await GetListOfStringValuesAsync($"SELECT ROUTINE_NAME " +
+            return GetListOfStringValuesAsync($"SELECT ROUTINE_NAME " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";", "ROUTINE_NAME");
         }
 
-        public async override Task<DataTable> GetStoredProceduresFullInfo()
+        public override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            return await GetTableOfValuesAsync($"SELECT ROUTINE_NAME as name, ROUTINE_TYPE as type, CREATED as creation_date " +
+            return GetTableOfValuesAsync($"SELECT ROUTINE_NAME as name, ROUTINE_TYPE as type, CREATED as creation_date " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"PROCEDURE\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
@@ -94,25 +94,25 @@ namespace DB_Analyzer.Analyzers
             throw new MySqlAnalyzerException(MySqlAnalyzerException.methodIsNotSupported);
         }
 
-        public async override Task<int> GetNumberOfFunctions()
+        public override Task<int> GetNumberOfFunctions()
         {
-            return await GetIntValueAsync($"SELECT COUNT(ROUTINE_NAME) " +
+            return GetIntValueAsync($"SELECT COUNT(ROUTINE_NAME) " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
         }
 
-        public async override Task<List<string>> GetFunctionsNames()
+        public override Task<List<string>> GetFunctionsNames()
         {
-            return await GetListOfStringValuesAsync($"SELECT ROUTINE_NAME " +
+            return GetListOfStringValuesAsync($"SELECT ROUTINE_NAME " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";", "ROUTINE_NAME");
         }
 
-        public async override Task<DataTable> GetFunctionsFullInfo()
+        public override Task<DataTable> GetFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync($"SELECT ROUTINE_NAME as name, ROUTINE_TYPE as type, CREATED as creation_date " +
+            return GetTableOfValuesAsync($"SELECT ROUTINE_NAME as name, ROUTINE_TYPE as type, CREATED as creation_date " +
                 $"FROM INFORMATION_SCHEMA.ROUTINES " +
                 $"WHERE ROUTINE_TYPE=\"FUNCTION\" " +
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
@@ -120,72 +120,93 @@ namespace DB_Analyzer.Analyzers
 
         protected override async Task<int> GetIntValueAsync(string query)
         {
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
+            using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))
+            {
+                await connection.OpenAsync();
 
-            try
-            {
-                return Convert.ToInt32(await command.ExecuteScalarAsync());
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                try
+                {
+                    return Convert.ToInt32(await command.ExecuteScalarAsync());
+                }
+                catch (Exception ex)
+                {
+                    throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+
+                    await command.DisposeAsync();
+                }
             }
         }
 
         protected override async Task<List<string>> GetListOfStringValuesAsync(string query, string column)
         {
-            List<string> result = new List<string>();
-
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
-
-            try
+            using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))
             {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+                await connection.OpenAsync();
+
+                List<string> result = new List<string>();
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                try
                 {
-                    while (reader.Read())
+                    using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
                     {
-                        result.Add(reader.GetFieldValue<string>(column));
-                    }
+                        while (reader.Read())
+                        {
+                            result.Add(reader.GetFieldValue<string>(column));
+                        }
 
-                    return result;
+                        return result;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
+                catch (Exception ex)
+                {
+                    throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+
+                    await command.DisposeAsync();
+                }
             }
         }
 
         protected override async Task<DataTable> GetTableOfValuesAsync(string query)
         {
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
-
-            try
+            using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))
             {
-                using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+                await connection.OpenAsync();
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                try
                 {
-                    DataTable dataTable = new DataTable();
+                    using MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+                    {
+                        DataTable dataTable = new DataTable();
 
-                    dataTable.Load(reader);
+                        dataTable.Load(reader);
 
-                    return dataTable;
+                        return dataTable;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
+                catch (Exception ex)
+                {
+                    throw new MySqlAnalyzerException(AnalyzerException.problemDuringHandling + ex.Message, ex);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+
+                    await command.DisposeAsync();
+                }
             }
         }
     }

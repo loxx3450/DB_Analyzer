@@ -23,7 +23,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.StructureProviders.TxtFile
 
         public List<DataTable> CollectionOfDataTables { get; set; }
 
-        public Report() 
+        public Report()
         { 
             DbName = string.Empty;
 

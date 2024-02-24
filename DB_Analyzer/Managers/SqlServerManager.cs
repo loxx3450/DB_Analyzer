@@ -21,14 +21,11 @@ namespace DB_Analyzer.Managers
             : base(connectionString, new SqlConnection(connectionString))
         { }
 
-        public async override Task Analyze(List<IReportItem<object>> reportItems)
+        public override Task Analyze(List<IReportItem<object>> reportItems)
         {
             Analyzer = new SqlServerAnalyzer((SqlConnection)Connection);
 
-            //foreach (var reportItem in reportItems)
-            //    await reportItem.Run(Analyzer);
-
-            await Parallel.ForEachAsync(reportItems, async (item, state) =>
+            return Parallel.ForEachAsync(reportItems, async (item, state) =>
             {
                 await item.Run(Analyzer);
             });

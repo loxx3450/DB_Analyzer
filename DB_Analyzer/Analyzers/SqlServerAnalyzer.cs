@@ -17,118 +17,118 @@ namespace DB_Analyzer.Analyzers
             : base(connection)
         { }
 
-        public async override Task<int> GetNumberOfTables()
+        public override Task<int> GetNumberOfTables()
         {
-            return await GetIntValueAsync("SELECT COUNT(*) " +
+            return GetIntValueAsync("SELECT COUNT(*) " +
                 "FROM SYS.TABLES");
         }
 
-        public async override Task<List<string>> GetTablesNames()
+        public override Task<List<string>> GetTablesNames()
         {
-            return await GetListOfStringValuesAsync("SELECT TABLE_NAME " +
+            return GetListOfStringValuesAsync("SELECT TABLE_NAME " +
                 "FROM INFORMATION_SCHEMA.TABLES " +
                 "WHERE TABLE_TYPE = 'BASE TABLE'", "TABLE_NAME");
         }
 
-        public async override Task<DataTable> GetTablesFullInfo()
+        public override Task<DataTable> GetTablesFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
+            return GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.TABLES");
         }
 
-        public async override Task<int> GetNumberOfStoredProcedures()
+        public override Task<int> GetNumberOfStoredProcedures()
         {
-            return await GetIntValueAsync("SELECT COUNT(*) " +
+            return GetIntValueAsync("SELECT COUNT(*) " +
                 "FROM SYS.PROCEDURES");
         }
 
-        public async override Task<List<string>> GetStoredProceduresNames()
+        public override Task<List<string>> GetStoredProceduresNames()
         {
-            return await GetListOfStringValuesAsync("SELECT NAME " +
+            return GetListOfStringValuesAsync("SELECT NAME " +
                 "FROM SYS.PROCEDURES", "NAME");
         }
 
-        public async override Task<DataTable> GetStoredProceduresFullInfo()
+        public override Task<DataTable> GetStoredProceduresFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
+            return GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.PROCEDURES");
         }
 
-        public async override Task<int> GetNumberOfScalarFunctions()
+        public override Task<int> GetNumberOfScalarFunctions()
         {
-            return await GetIntValueAsync("SELECT COUNT(*)  " +
+            return GetIntValueAsync("SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%scalar_function%'");
         }
 
-        public async override Task<List<string>> GetScalarFunctionsNames()
+        public override Task<List<string>> GetScalarFunctionsNames()
         {
-            return await GetListOfStringValuesAsync("SELECT NAME  " +
+            return GetListOfStringValuesAsync("SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%scalar_function%'", "NAME");
         }
 
-        public async override Task<DataTable> GetScalarFunctionsFullInfo()
+        public override Task<DataTable> GetScalarFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
+            return GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%scalar_function%'");
         }
 
-        public async override Task<int> GetNumberOfTableValuedFunctions()
+        public override Task<int> GetNumberOfTableValuedFunctions()
         {
-            return await GetIntValueAsync("SELECT COUNT(*)  " +
+            return GetIntValueAsync("SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%table_valued_function%'");
         }
 
-        public async override Task<List<string>> GetTableValuedFunctionsNames()
+        public override Task<List<string>> GetTableValuedFunctionsNames()
         {
-            return await GetListOfStringValuesAsync("SELECT NAME  " +
+            return GetListOfStringValuesAsync("SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%table_valued_function%'", "NAME");
         }
 
-        public async override Task<DataTable> GetTableValuedFunctionsFullInfo()
+        public override Task<DataTable> GetTableValuedFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
+            return GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%table_valued_function%'");
         }
 
-        public async override Task<int> GetNumberOfFunctions()
+        public override Task<int> GetNumberOfFunctions()
         {
-            return await GetIntValueAsync("SELECT COUNT(*)  " +
+            return GetIntValueAsync("SELECT COUNT(*)  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%function%'");
         }
 
-        public async override Task<List<string>> GetFunctionsNames()
+        public override Task<List<string>> GetFunctionsNames()
         {
-            return await GetListOfStringValuesAsync("SELECT NAME  " +
+            return GetListOfStringValuesAsync("SELECT NAME  " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
                 "WHERE TYPE_DESC LIKE '%function%'", "NAME");
         }
 
-        public async override Task<DataTable> GetFunctionsFullInfo()
+        public override Task<DataTable> GetFunctionsFullInfo()
         {
-            return await GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
+            return GetTableOfValuesAsync("SELECT name as name, type_desc as type, create_date as creation_date " +
                 "FROM SYS.SQL_MODULES M " +
                 "INNER JOIN SYS.OBJECTS OBJ " +
                 "   ON M.OBJECT_ID=OBJ.OBJECT_ID " +
