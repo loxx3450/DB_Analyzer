@@ -16,7 +16,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
 {
     internal class MySqlDataInserter : DbDataInserter
     {
-        public MySqlDataInserter(MySqlConnection connection, string analyzedDB_Name) 
+        public MySqlDataInserter(MySqlConnection connection, string analyzedDB_Name)
             : base(connection, analyzedDB_Name)
         {
             DataConvertor = new MySqlDataConvertor();
@@ -50,9 +50,11 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
             }
         }
 
-        protected override async Task InsertDataForScalarValue(IReportItem<object> reportItem)
+        protected override async Task InsertDataForScalarValue(ReportItem reportItem)
         {
-            string value = DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType());
+            Type type = TypesHandler.TypesHandler.GetScalarValueType(reportItem);
+
+            string value = DataConvertor.ConvertValue(reportItem.Value, type);
 
             if (FirstScalarValue)
             {
@@ -69,9 +71,11 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
             }
         }
 
-        protected override async Task InsertDataForReferenceValue(IReportItem<object> reportItem)
+        protected override async Task InsertDataForReferenceValue(ReportItem reportItem)
         {
-            string value = DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType());
+            Type type = TypesHandler.TypesHandler.GetReferenceValueType(reportItem);
+
+            string value = DataConvertor.ConvertValue(reportItem.Value, type);
 
             if (FirstReferenceValue)
             {
@@ -88,7 +92,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
             }
         }
 
-        protected override async Task InsertDataForDataTable(IReportItem<object> reportItem)
+        protected override async Task InsertDataForDataTable(ReportItem reportItem)
         {
             string query = $"INSERT INTO {reportItem.Name} (";
 

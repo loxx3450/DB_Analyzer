@@ -2,13 +2,14 @@
 using DB_Analyzer.Managers;
 using DB_Analyzer.ReportItems;
 using DB_Analyzer.ReportItems.Flags;
-using DB_Analyzer.ReportItems.Functions.Global;
-using DB_Analyzer.ReportItems.Functions.Scalar;
-using DB_Analyzer.ReportItems.Functions.TableValued;
-using DB_Analyzer.ReportItems.StoredProcedures;
+//using DB_Analyzer.ReportItems.Functions.Global;
+//using DB_Analyzer.ReportItems.Functions.Scalar;
+//using DB_Analyzer.ReportItems.Functions.TableValued;
+//using DB_Analyzer.ReportItems.StoredProcedures;
 using DB_Analyzer.ReportItems.Tables;
 using DB_Analyzer.ReportSavers;
 using DB_Analyzer.ReportSavers.DbReportSavers;
+using DB_Analyzer.ReportSavers.TxtFileReportSaver;
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
@@ -29,7 +30,7 @@ SqlServerManager manager = new(connString);
 await manager.ConnectToDBAsync();
 
 
-List<IReportItem<object>> reportItems = manager.GetAllPossibleReportItems();
+List<ReportItem> reportItems = manager.GetAllPossibleReportItems();
 
 
 await manager.Analyze(reportItems);
@@ -44,5 +45,29 @@ await manager.SaveReport(reportSaver, reportItems);
 #endregion
 
 #region test
+//foreach (var reportItem in reportItems)
+//{
+//    if (reportItem is IReportItem<int>)
+//        Console.WriteLine(reportItem.GetValue<int>());
+//    else if (reportItem is IReportItem<List<string>>)
+//    {
+//        List<string> s = reportItem.GetValue<List<string>>();
 
+//        s.ForEach(s => Console.WriteLine(s));
+//    }
+//    else if (reportItem is IReportItem<DataTable>)
+//    {
+//        DataTable dt = reportItem.GetValue<DataTable>();
+
+//        foreach (DataRow dr in dt.Rows)
+//        {
+//            for (int i = 0; i < dt.Columns.Count; i++)
+//            {
+//                Console.Write(dr[i]);
+//            }
+
+//            Console.WriteLine();
+//        }
+//    }
+//}
 #endregion

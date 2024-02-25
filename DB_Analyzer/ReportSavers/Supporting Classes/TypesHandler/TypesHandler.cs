@@ -12,31 +12,64 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
 {
     internal static class TypesHandler
     {
-        public static string GetScalarValueType(Type type)
+        //Getting Value Type/Description
+        public static Type GetScalarValueType(ReportItem reportItem)
         {
-            if (!IsScalarValueType(type))
-            {
+            if (!IsScalarValueType(reportItem))
                 throw new TypesHandlerException("Invalid argument by TypesHandler", new ArgumentException());
-            }
 
-            return type.GenericTypeArguments[0].Name.ToLower();
+            return GetTypeOfReportItem(reportItem);
         }
 
-        public static string GetReferenceValueType(Type type)
+        public static string GetScalarValueTypeDescription(ReportItem reportItem)
         {
+            return GetScalarValueType(reportItem).Name.ToLower();
+        }
+
+
+        public static Type GetReferenceValueType(ReportItem reportItem)
+        {
+            if (!IsReferenceValueType(reportItem))
+                throw new TypesHandlerException("Invalid argument by TypesHandler", new ArgumentException());
+
+            return GetTypeOfReportItem(reportItem);
+        }
+
+        public static string GetReferenceValueTypeDescription(ReportItem reportItem)
+        {
+            Type type = GetReferenceValueType(reportItem);
+
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>) && type.GetGenericArguments()[0] == typeof(string)) { return "List<string>"; }
 
             throw new TypesHandlerException("Unknown data type...", new ArgumentException());
         }
 
-        public static string GetDataColumnValueType(DataColumn column)
+
+        public static Type GetDataColumnValueType(DataColumn column)
         {
-            return column.DataType.Name.ToLower();
+            return column.DataType;
+        }
+
+        public static string GetDataColumnValueTypeDescription(DataColumn column)
+        {
+            return GetDataColumnValueType(column).Name.ToLower();
+        }
+
+        //Checking ValueTypes
+        public static bool IsScalarValueType(ReportItem reportItem)        
+        {
+            return GetTypeOfReportItem(reportItem).IsPrimitive;
         }
 
         public static bool IsScalarValueType(Type type)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ScalarValue<>);
+            return type.IsPrimitive;
+        }
+
+
+        public static bool IsReferenceValueType(ReportItem reportItem)
+        {
+            return !IsDataTableValueType(reportItem) && !IsScalarValueType(reportItem);
         }
 
         public static bool IsReferenceValueType(Type type)
@@ -44,9 +77,34 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             return !IsDataTableValueType(type) && !IsScalarValueType(type);
         }
 
+
+        public static bool IsDataTableValueType(ReportItem reportItem)
+        {
+            return GetTypeOfReportItem(reportItem) == typeof(DataTable);
+        }
+
         public static bool IsDataTableValueType(Type type)
         {
             return type == typeof(DataTable);
+        }
+
+        //Global
+        private static Type GetTypeOfReportItem(ReportItem reportItem)
+        {
+            foreach (Type iface in reportItem.GetType().GetInterfaces())
+            {
+                if (iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IReportItem<>))
+                {
+                    if (iface.GetGenericArguments().Length != 0)
+                    {
+                        return iface.GetGenericArguments()[0];
+                    }
+
+                    break;
+                }
+            }
+
+            return null;
         }
     }
 }

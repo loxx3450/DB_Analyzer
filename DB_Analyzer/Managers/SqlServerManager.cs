@@ -21,7 +21,7 @@ namespace DB_Analyzer.Managers
             : base(connectionString, new SqlConnection(connectionString))
         { }
 
-        public override Task Analyze(List<IReportItem<object>> reportItems)
+        public override Task Analyze(List<ReportItem> reportItems)
         {
             Analyzer = new SqlServerAnalyzer((SqlConnection)Connection);
 
@@ -31,7 +31,7 @@ namespace DB_Analyzer.Managers
             });
         }
 
-        public override List<IReportItem<object>> GetAllPossibleReportItems()
+        public override List<ReportItem> GetAllPossibleReportItems()
         {
             return ReportItemsListCreator.GetAllPossibleReportItems<ISqlServerReportItem>();
         }

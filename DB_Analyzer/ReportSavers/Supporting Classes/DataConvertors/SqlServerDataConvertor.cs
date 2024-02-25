@@ -31,8 +31,8 @@ namespace DB_Analyzer.ReportSavers.DataConvertors
         {
             if (type == typeof(DateTime))
             {
-                string newDateString = DateTime.ParseExact(value.ToString(), "dd.MM.yyyy HH:mm:ss", null).ToString("yyyy-MM-dd HH:mm:ss");
-                return $"CONVERT(datetime, '{newDateString}', 120)";
+                string newDate = DateTime.ParseExact(value.ToString(), "dd.MM.yyyy HH:mm:ss", null).ToString("yyyy-MM-dd HH:mm:ss");
+                return $"CONVERT(datetime, '{newDate}', 120)";
             }
 
             string? data = value.ToString();

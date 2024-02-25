@@ -22,25 +22,25 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
         protected bool FirstReferenceValue { get; set; }
 
         public DbDataInserter(DbConnection connection, string analyzedDB_Name) : base(analyzedDB_Name)
-        { 
+        {
             Connection = connection;
         }
 
-        public async Task InsertData(List<IReportItem<object>> reportItems)
+        public async Task InsertData(List<ReportItem> reportItems)
         {
             await InsertDataForReport();
 
             foreach (var reportItem in reportItems)
             {
-                if (TypesHandler.TypesHandler.IsScalarValueType(reportItem.GetValueType()))
+                if (TypesHandler.TypesHandler.IsScalarValueType(reportItem))
                 {
                     await InsertDataForScalarValue(reportItem);
                 }
-                else if (TypesHandler.TypesHandler.IsReferenceValueType(reportItem.GetValueType()))
+                else if (TypesHandler.TypesHandler.IsReferenceValueType(reportItem))
                 {
                     await InsertDataForReferenceValue(reportItem);
                 }
-                else if (TypesHandler.TypesHandler.IsDataTableValueType(reportItem.GetValueType()))
+                else if (TypesHandler.TypesHandler.IsDataTableValueType(reportItem))
                 {
                     await InsertDataForDataTable(reportItem);
                 }
@@ -51,11 +51,11 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         protected abstract Task<int> GetReportID();
 
-        protected abstract Task InsertDataForScalarValue(IReportItem<object> reportItem);
+        protected abstract Task InsertDataForScalarValue(ReportItem reportItem);
 
-        protected abstract Task InsertDataForReferenceValue(IReportItem<object> reportItem);
+        protected abstract Task InsertDataForReferenceValue(ReportItem reportItem);
 
-        protected abstract Task InsertDataForDataTable(IReportItem<object> reportItem);
+        protected abstract Task InsertDataForDataTable(ReportItem reportItem);
 
         protected abstract Task ExecuteNonQueryAsync(string query);
     }

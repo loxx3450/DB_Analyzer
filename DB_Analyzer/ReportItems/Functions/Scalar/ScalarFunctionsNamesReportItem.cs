@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.Functions.Scalar
 {
-    public class ScalarFunctionsNamesReportItem : ReportItem<List<string>>, ISqlServerReportItem
+    public class ScalarFunctionsNamesReportItem : ReportItem, IReportItem<List<string>>, ISqlServerReportItem
     {
         public override string Name { get; } = "scalar_functions_names";
-        public override List<string> Value { get; protected set; }
 
         public async override Task Run(DbAnalyzer analyzer)
         {

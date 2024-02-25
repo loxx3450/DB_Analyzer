@@ -15,6 +15,6 @@ namespace DB_Analyzer.ReportSavers
         internal IStructureProvider StructureProvider { get; set; }
         internal DataInserter DataInserter { get; set; }
 
-        public abstract Task SaveReport(List<IReportItem<object>> reportItems);
+        public abstract Task SaveReport(List<ReportItem> reportItems);
     }
 }

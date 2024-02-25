@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems
 {
-    public abstract class ReportItem<T> : IReportItem<T> where T : class
+    public abstract class ReportItem
     {
         public abstract string Name { get; }
-        public abstract T Value { get; protected set; }
+        public object Value { get; protected set; }
 
-        public Type GetValueType()
+        public K GetValue<K>()
         {
-            return typeof(T);
+            return (K)Value;
         }
 
         public abstract Task Run(DbAnalyzer analyzer);

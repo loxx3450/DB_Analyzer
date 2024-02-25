@@ -35,7 +35,7 @@ namespace DB_Analyzer.ReportSavers.DbReportSavers
             }
         }
 
-        public async override Task SaveReport(List<IReportItem<object>> reportItems)
+        public async override Task SaveReport(List<ReportItem> reportItems)
         {
             await OpenDBAsync();
 

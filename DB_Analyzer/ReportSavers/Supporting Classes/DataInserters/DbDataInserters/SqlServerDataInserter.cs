@@ -48,9 +48,11 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             }
         }
 
-        protected override async Task InsertDataForScalarValue(IReportItem<object> reportItem)
+        protected override async Task InsertDataForScalarValue(ReportItem reportItem)
         {
-            string value = DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType());
+            Type type = TypesHandler.TypesHandler.GetScalarValueType(reportItem);
+
+            string value = DataConvertor.ConvertValue(reportItem.Value, type);
 
             if (FirstScalarValue)
             {
@@ -67,9 +69,11 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             }
         }
 
-        protected override async Task InsertDataForReferenceValue(IReportItem<object> reportItem)
+        protected override async Task InsertDataForReferenceValue(ReportItem reportItem)
         {
-            string value = DataConvertor.ConvertValue(reportItem.Value, reportItem.GetValueType());
+            Type type = TypesHandler.TypesHandler.GetReferenceValueType(reportItem);
+
+            string value = DataConvertor.ConvertValue(reportItem.Value, type);
 
             if (FirstReferenceValue)
             {
@@ -86,7 +90,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             }
         }
 
-        protected override async Task InsertDataForDataTable(IReportItem<object> reportItem)
+        protected override async Task InsertDataForDataTable(ReportItem reportItem)
         {
             string query = $"INSERT INTO {reportItem.Name} (";
 
@@ -96,7 +100,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
                 return;
 
             bool firstColumn = true;
-            
+
             foreach (DataColumn column in dataTable.Columns)
             {
                 if (!firstColumn)
@@ -109,7 +113,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
             query += ", report_id) VALUES";
 
-            foreach (DataRow row in dataTable.Rows) 
+            foreach (DataRow row in dataTable.Rows)
             {
                 query += '(';
 

@@ -15,7 +15,7 @@ namespace DB_Analyzer.Helpers.ReportItemsListsCreator
 {
     internal class ReportItemsListCreator
     {
-        protected List<IReportItem<object>> allReportItems = new List<IReportItem<object>>()
+        protected List<ReportItem> allReportItems = new List<ReportItem>()
         {
             new NumberOfTablesReportItem(),
             new TablesNamesReportItem(),
@@ -34,9 +34,9 @@ namespace DB_Analyzer.Helpers.ReportItemsListsCreator
             new TableValuedFunctionsFullInfoReportItem()
         };
 
-        public List<IReportItem<object>> GetAllPossibleReportItems<T>()
+        public List<ReportItem> GetAllPossibleReportItems<T>()
         {
-            List<IReportItem<object>> reportItems = new List<IReportItem<object>>();
+            List<ReportItem> reportItems = new List<ReportItem>();
 
             foreach (var item in allReportItems)
             {

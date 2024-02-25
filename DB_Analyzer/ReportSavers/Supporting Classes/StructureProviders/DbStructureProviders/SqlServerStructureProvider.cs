@@ -13,7 +13,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 {
     internal class SqlServerStructureProvider : DbStructureProvider
     {
-        public SqlServerStructureProvider(SqlConnection connection) 
+        public SqlServerStructureProvider(SqlConnection connection)
             : base(connection)
         {
             TypesConvertor = new SqlServerTypesConvertor();
@@ -55,11 +55,11 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
             }
         }
 
-        protected override async Task ProvideExtendedStructureForScalarValue(IReportItem<object> reportItem)
+        protected override async Task ProvideExtendedStructureForScalarValue(ReportItem reportItem)
         {
             if (!await Exists($"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'scalar_values' AND COLUMN_NAME = '{reportItem.Name}'"))
             {
-                string type = TypesConvertor.ConvertType(TypesHandler.TypesHandler.GetScalarValueType(reportItem.GetValueType()));
+                string type = TypesConvertor.ConvertType(TypesHandler.TypesHandler.GetScalarValueTypeDescription(reportItem));
 
                 await ExecuteNonQueryAsync($"ALTER TABLE scalar_values ADD {reportItem.Name} {type} NULL");
 
@@ -68,18 +68,18 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
             }
         }
 
-        protected override async Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem)
+        protected override async Task ProvideExtendedStructureForReferenceValue(ReportItem reportItem)
         {
             if (!await Exists($"SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'reference_values' AND COLUMN_NAME = '{reportItem.Name}'"))
             {
                 await ExecuteNonQueryAsync($"ALTER TABLE reference_values ADD {reportItem.Name} NVARCHAR(MAX) NULL");
 
                 await ExecuteNonQueryAsync($"INSERT INTO reference_values_types(reference_value_name, type_name) " +
-                    $"VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetReferenceValueType(reportItem.GetValueType())}')");
+                    $"VALUES ('{reportItem.Name}', '{TypesHandler.TypesHandler.GetReferenceValueType(reportItem)}')");
             }
         }
 
-        protected override async Task ProvideExtendedStructureForDataTable(IReportItem<object> reportItem)
+        protected override async Task ProvideExtendedStructureForDataTable(ReportItem reportItem)
         {
             if (!await Exists($"SELECT 1 FROM sys.tables WHERE name = '{reportItem.Name}'"))
             {
@@ -90,7 +90,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 
                 foreach (DataColumn column in dt.Columns)
                 {
-                    query += $"{column.ColumnName} {TypesConvertor.ConvertType(TypesHandler.TypesHandler.GetDataColumnValueType(column))} NULL, ";
+                    query += $"{column.ColumnName} {TypesConvertor.ConvertType(TypesHandler.TypesHandler.GetDataColumnValueTypeDescription(column))} NULL, ";
                 }
 
                 query += "        report_id INT NOT NULL," +

@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems.StoredProcedures
 {
-    public class StoredProceduresFullInfoReportItem : ReportItem<DataTable>, ISqlServerReportItem, IMySqlReportItem
+    public class StoredProceduresFullInfoReportItem : ReportItem, IReportItem<DataTable>, ISqlServerReportItem, IMySqlReportItem
     {
         public override string Name { get; } = "stored_procedures_full_info";
-        public override DataTable Value { get; protected set; }
 
         public async override Task Run(DbAnalyzer analyzer)
         {

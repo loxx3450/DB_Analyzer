@@ -9,81 +9,68 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataInserter
 {
     internal class TxtFileDataInserter : DataInserter
     {
-        public TxtFileDataInserter(string analyzedDB_Name) 
+        public TxtFileDataInserter(string analyzedDB_Name)
             : base(analyzedDB_Name)
         { }
 
-        public async Task InsertData(List<IReportItem<object>> reportItems, Report report)
+        public async Task InsertData(List<ReportItem> reportItems, Report report)
         {
             FillReportWithData(reportItems, report);
 
-            string result = JsonSerializer.Serialize(report, new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.Preserve,
-                Converters = { new JsonSerializerTypeConverter.JsonSerializerTypeConverter() }
-            });
+            string result = JsonConvert.SerializeObject(report);
 
             using (StreamWriter writer = new StreamWriter("./report.TXT", true))
             {
                 await writer.WriteAsync(result);
 
-                await writer.WriteAsync("\n\n\n\n\n\n\n\n\n\n");
+                await writer.WriteAsync("\n\n\n\n\n\n\n");
             }
 
-            //Report? news = JsonSerializer.Deserialize<Report>(result, new JsonSerializerOptions
-            //{
-            //    //ReferenceHandler = ReferenceHandler.Preserve,
-            //    Converters = { new TypeConverter() }
-            //});
-
-            //Console.Read();
+            Report rep = JsonConvert.DeserializeObject<Report>(result);
         }
 
-        private void FillReportWithData(List<IReportItem<object>> reportItems, Report report)
+        private void FillReportWithData(List<ReportItem> reportItems, Report report)
         {
-            Type reportItemType;
-
             report.DbName = AnalyzedDB_Name;
 
             report.CreationDate = DateTime.Now;
 
             foreach (var reportItem in reportItems)
             {
-                reportItemType = reportItem.GetValueType();
-
-                if (TypesHandler.TypesHandler.IsScalarValueType(reportItemType))
+                if (TypesHandler.TypesHandler.IsScalarValueType(reportItem))
                 {
-                    AddScalarValueToReport(report, reportItem, reportItemType);
+                    AddScalarValueToReport(reportItem, report);
                 }
-                else if (TypesHandler.TypesHandler.IsReferenceValueType(reportItemType))
+                else if (TypesHandler.TypesHandler.IsReferenceValueType(reportItem))
                 {
-                    AddReferenceValueToReport(report, reportItem, reportItemType);
+                    AddReferenceValueToReport(reportItem, report);
                 }
-                else if (TypesHandler.TypesHandler.IsDataTableValueType(reportItemType))
+                else if (TypesHandler.TypesHandler.IsDataTableValueType(reportItem))
                 {
                     report.CollectionOfDataTables.Add((DataTable)reportItem.Value);
                 }
             }
         }
 
-        private void AddScalarValueToReport(Report report, IReportItem<object> reportItem, Type reportItemType)
+        private void AddScalarValueToReport(ReportItem reportItem, Report report)
         {
-            switch (TypesHandler.TypesHandler.GetScalarValueType(reportItemType))
+            switch (TypesHandler.TypesHandler.GetScalarValueTypeDescription(reportItem))
             {
                 case "int32":
-                    report.CollectionOfIntegers.Add(Convert.ToInt32(reportItem.Value.ToString()));
+                    report.CollectionOfIntegers.Add((int)reportItem.Value);
                     break;
             }
         }
 
-        private void AddReferenceValueToReport(Report report, IReportItem<object> reportItem, Type reportItemType)
+        private void AddReferenceValueToReport(ReportItem reportItem, Report report)
         {
-            switch (TypesHandler.TypesHandler.GetReferenceValueType(reportItemType))
+            switch (TypesHandler.TypesHandler.GetReferenceValueTypeDescription(reportItem))
             {
                 case "List<string>":
                     report.CollectionOfStringLists.Add((List<string>)reportItem.Value);

@@ -40,13 +40,13 @@ namespace DB_Analyzer.Managers
             }
         }
 
-        public async Task SaveReport(ReportSaver reportSaver, List<IReportItem<object>> reportItems)
+        public async Task SaveReport(ReportSaver reportSaver, List<ReportItem> reportItems)
         {
             await reportSaver.SaveReport(reportItems);
         }
 
-        public abstract Task Analyze(List<IReportItem<object>> reportItems);
-        public abstract List<IReportItem<object>> GetAllPossibleReportItems();
+        public abstract Task Analyze(List<ReportItem> reportItems);
+        public abstract List<ReportItem> GetAllPossibleReportItems();
 
         ~Manager()
         {

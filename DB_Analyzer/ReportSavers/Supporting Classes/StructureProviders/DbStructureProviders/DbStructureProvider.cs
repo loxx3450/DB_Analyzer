@@ -22,7 +22,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
             Connection = connection;
         }
 
-        public async Task ProvideStructure(List<IReportItem<object>> reportItems)
+        public async Task ProvideStructure(List<ReportItem> reportItems)
         {
             await ProvideDefaultStructure();
 
@@ -33,30 +33,30 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 
         protected abstract Task CreateTableIfNotExists(string dbName, string parameters);
 
-        private async Task ProvideExtendedStructure(List<IReportItem<object>> reportItems)
+        private async Task ProvideExtendedStructure(List<ReportItem> reportItems)
         {
             foreach (var reportItem in reportItems)
             {
-                if (TypesHandler.TypesHandler.IsScalarValueType(reportItem.GetValueType()))
+                if (TypesHandler.TypesHandler.IsScalarValueType(reportItem))
                 {
                     await ProvideExtendedStructureForScalarValue(reportItem);
                 }
-                else if (TypesHandler.TypesHandler.IsReferenceValueType(reportItem.GetValueType()))
+                else if (TypesHandler.TypesHandler.IsReferenceValueType(reportItem))
                 {
                     await ProvideExtendedStructureForReferenceValue(reportItem);
                 }
-                else if (TypesHandler.TypesHandler.IsDataTableValueType(reportItem.GetValueType()))
+                else if (TypesHandler.TypesHandler.IsDataTableValueType(reportItem))
                 {
                     await ProvideExtendedStructureForDataTable(reportItem);
                 }
             }
         }
 
-        protected abstract Task ProvideExtendedStructureForScalarValue(IReportItem<object> reportItem);
+        protected abstract Task ProvideExtendedStructureForScalarValue(ReportItem reportItem);
 
-        protected abstract Task ProvideExtendedStructureForReferenceValue(IReportItem<object> reportItem);
+        protected abstract Task ProvideExtendedStructureForReferenceValue(ReportItem reportItem);
 
-        protected abstract Task ProvideExtendedStructureForDataTable(IReportItem<object> reportItem);
+        protected abstract Task ProvideExtendedStructureForDataTable(ReportItem reportItem);
 
         protected abstract Task<bool> Exists(string query);
 

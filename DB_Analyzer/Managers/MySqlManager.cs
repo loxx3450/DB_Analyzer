@@ -24,7 +24,7 @@ namespace DB_Analyzer.Managers
             : base(connectionString, new MySqlConnection(connectionString))
         { }
 
-        public override async Task Analyze(List<IReportItem<object>> reportItems)
+        public override async Task Analyze(List<ReportItem> reportItems)
         {
             Analyzer = new MySqlAnalyzer((MySqlConnection)Connection);
 
@@ -64,7 +64,7 @@ namespace DB_Analyzer.Managers
             //    throw exception;
         }
 
-        public override List<IReportItem<object>> GetAllPossibleReportItems()
+        public override List<ReportItem> GetAllPossibleReportItems()
         {
             return ReportItemsListCreator.GetAllPossibleReportItems<IMySqlReportItem>();
         }
