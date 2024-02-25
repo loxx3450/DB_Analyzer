@@ -10,13 +10,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Data.Common;
 
 namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataInserter
 {
     internal class TxtFileDataInserter : DataInserter
     {
-        public TxtFileDataInserter(string analyzedDB_Name)
-            : base(analyzedDB_Name)
+        public TxtFileDataInserter(DbConnection analyzedDbConnection)
+            : base(analyzedDbConnection)
         { }
 
         public async Task InsertData(List<ReportItem> reportItems, Report report)
@@ -37,7 +38,11 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
 
         private void FillReportWithData(List<ReportItem> reportItems, Report report)
         {
-            report.DbName = AnalyzedDB_Name;
+            report.DbmsName = GetDbmsName();
+
+            report.ServerName = AnalyzedDbConnection.DataSource;
+
+            report.DbName = AnalyzedDbConnection.Database;
 
             report.CreationDate = DateTime.Now;
 

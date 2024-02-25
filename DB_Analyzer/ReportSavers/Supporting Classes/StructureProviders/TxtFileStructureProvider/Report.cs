@@ -10,9 +10,12 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportSavers.Supporting_Classes.StructureProviders.TxtFileStructureProvider
 {
-    [Serializable]
-    internal class Report
+    public class Report
     {
+        public string DbmsName { get; set; }
+
+        public string ServerName { get; set; }
+
         public string DbName { get; set; }
 
         public DateTime CreationDate { get; set; }

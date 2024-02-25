@@ -15,12 +15,12 @@ namespace DB_Analyzer.ReportSavers.DbReportSavers
 {
     public class MySqlReportSaver : DbReportSaver
     {
-        public MySqlReportSaver(string connectionString, string analyzedDB_Name)
-            : base(new MySqlConnection(connectionString))
+        public MySqlReportSaver(string connectionString, DbConnection analyzedDbConnection)
+            : base(new MySqlConnection(connectionString), analyzedDbConnection)
         {
             StructureProvider = new MySqlStructureProvider((MySqlConnection)Connection);
 
-            DataInserter = new MySqlDataInserter((MySqlConnection)Connection, analyzedDB_Name);
+            DataInserter = new MySqlDataInserter((MySqlConnection)Connection, AnalyzedDbConnection);
         }
     }
 }

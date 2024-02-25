@@ -26,6 +26,8 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
         {
             await CreateTableIfNotExists("reports",
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                "dbms_name VARCHAR(255) NOT NULL, " +
+                "server_name VARCHAR(255) NOT NULL, " +
                 "db_name VARCHAR(255) NOT NULL, " +
                 "creation_date DATETIME NOT NULL");
 

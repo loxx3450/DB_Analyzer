@@ -16,15 +16,16 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
 {
     internal class MySqlDataInserter : DbDataInserter
     {
-        public MySqlDataInserter(MySqlConnection connection, string analyzedDB_Name)
-            : base(connection, analyzedDB_Name)
+        public MySqlDataInserter(MySqlConnection connection, DbConnection analyzedDbConnection)
+            : base(connection, analyzedDbConnection)
         {
             DataConvertor = new MySqlDataConvertor();
         }
 
         protected override async Task InsertDataForReport()
         {
-            await ExecuteNonQueryAsync($"INSERT INTO reports (db_name, creation_date) VALUES ('{AnalyzedDB_Name}', CURRENT_TIMESTAMP)");
+            await ExecuteNonQueryAsync($"INSERT INTO reports (dbms_name, server_name, db_name, creation_date) " +
+                $"VALUES ('{GetDbmsName()}', '{AnalyzedDbConnection.DataSource}', '{AnalyzedDbConnection.Database}', CURRENT_TIMESTAMP)");
 
             ReportID = await GetReportID();
 

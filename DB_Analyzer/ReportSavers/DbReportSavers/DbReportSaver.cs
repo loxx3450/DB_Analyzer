@@ -18,7 +18,8 @@ namespace DB_Analyzer.ReportSavers.DbReportSavers
     {
         protected DbConnection Connection { get; set; }
 
-        public DbReportSaver(DbConnection connection)
+        public DbReportSaver(DbConnection connection, DbConnection analyzedDbConnection)
+            : base(analyzedDbConnection)
         {
             Connection = connection;
         }

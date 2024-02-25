@@ -21,7 +21,8 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
         protected bool FirstScalarValue { get; set; }
         protected bool FirstReferenceValue { get; set; }
 
-        public DbDataInserter(DbConnection connection, string analyzedDB_Name) : base(analyzedDB_Name)
+        public DbDataInserter(DbConnection connection, DbConnection analyzedDbConnection) 
+            : base(analyzedDbConnection)
         {
             Connection = connection;
         }

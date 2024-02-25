@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +15,16 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 {
     internal class SqlServerDataInserter : DbDataInserter
     {
-        public SqlServerDataInserter(SqlConnection connection, string analyzedDB_Name)
-            : base(connection, analyzedDB_Name)
+        public SqlServerDataInserter(SqlConnection connection, DbConnection analyzedDbConnection)
+            : base(connection, analyzedDbConnection)
         {
             DataConvertor = new SqlServerDataConvertor();
         }
 
         protected override async Task InsertDataForReport()
         {
-            await ExecuteNonQueryAsync($"INSERT INTO reports (db_name, creation_date) VALUES ('{AnalyzedDB_Name}', GETDATE())");
+            await ExecuteNonQueryAsync($"INSERT INTO reports (dbms_name, server_name, db_name, creation_date) " +
+                $"VALUES ('{GetDbmsName()}', '{AnalyzedDbConnection.DataSource}', '{AnalyzedDbConnection.Database}', GETDATE())");
 
             ReportID = await GetReportID();
 
