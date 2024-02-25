@@ -24,44 +24,14 @@ namespace DB_Analyzer.Managers
             : base(connectionString, new MySqlConnection(connectionString))
         { }
 
-        public override async Task Analyze(List<ReportItem> reportItems)
+        public override Task Analyze(List<ReportItem> reportItems)
         {
             Analyzer = new MySqlAnalyzer((MySqlConnection)Connection);
 
-            await Parallel.ForEachAsync(reportItems, async (item, state) =>
+            return Parallel.ForEachAsync(reportItems, async (item, state) =>
             {
                 await item.Run(Analyzer);
             });
-
-            //Analyzer = new MySqlAnalyzer((MySqlConnection)Connection);
-
-            //Exception? exception = null;
-
-            //var cts = new CancellationTokenSource();
-
-            //CancellationToken token = cts.Token;
-
-            //await Parallel.ForEachAsync(reportItems, async (item, state) =>
-            //{
-            //    token.ThrowIfCancellationRequested();
-
-            //    try
-            //    {
-            //        await item.Run(Analyzer);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        lock (locker)
-            //        {
-            //            exception = ex;
-
-            //            cts.Cancel();
-            //        }
-            //    }
-            //});
-
-            //if (exception is not null)
-            //    throw exception;
         }
 
         public override List<ReportItem> GetAllPossibleReportItems()

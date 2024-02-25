@@ -2,8 +2,10 @@
 using DB_Analyzer.ReportItems;
 using DB_Analyzer.ReportSavers.DataInserters.DbDataInserters;
 using DB_Analyzer.ReportSavers.Supporting_Classes.DataConvertors;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +13,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Type = System.Type;
 
 namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInserters
 {
@@ -22,15 +25,15 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
             DataConvertor = new MySqlDataConvertor();
         }
 
-        protected override async Task InsertDataForReport()
+        protected override async Task InsertDefaultDataForReport()
         {
             await ExecuteNonQueryAsync($"INSERT INTO reports (dbms_name, server_name, db_name, creation_date) " +
                 $"VALUES ('{GetDbmsName()}', '{AnalyzedDbConnection.DataSource}', '{AnalyzedDbConnection.Database}', CURRENT_TIMESTAMP)");
 
             ReportID = await GetReportID();
 
-            FirstScalarValue = true;
-            FirstReferenceValue = true;
+            await ExecuteNonQueryAsync($"INSERT INTO scalar_values (report_id) VALUES ({ReportID})");
+            await ExecuteNonQueryAsync($"INSERT INTO reference_values (report_id) VALUES ({ReportID})");
         }
 
         protected override async Task<int> GetReportID()
@@ -57,19 +60,9 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
 
             string value = DataConvertor.ConvertValue(reportItem.Value, type);
 
-            if (FirstScalarValue)
-            {
-                await ExecuteNonQueryAsync($"INSERT INTO scalar_values ({reportItem.Name}, report_id) " +
-                    $"VALUES ({value}, {ReportID})");
-
-                FirstScalarValue = false;
-            }
-            else
-            {
-                await ExecuteNonQueryAsync($"UPDATE scalar_values " +
-                    $"SET {reportItem.Name} = {value} " +
-                    $"WHERE report_id = {ReportID}");
-            }
+            await ExecuteNonQueryAsync($"UPDATE scalar_values " +
+                $"SET {reportItem.Name} = {value} " +
+                $"WHERE report_id = {ReportID}");
         }
 
         protected override async Task InsertDataForReferenceValue(ReportItem reportItem)
@@ -78,19 +71,9 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
 
             string value = DataConvertor.ConvertValue(reportItem.Value, type);
 
-            if (FirstReferenceValue)
-            {
-                await ExecuteNonQueryAsync($"INSERT INTO reference_values ({reportItem.Name}, report_id) " +
-                    $"VALUES ('{value}', {ReportID})");
-
-                FirstReferenceValue = false;
-            }
-            else
-            {
-                await ExecuteNonQueryAsync($"UPDATE reference_values " +
-                    $"SET {reportItem.Name} = '{value}' " +
-                    $"WHERE report_id = {ReportID}");
-            }
+            await ExecuteNonQueryAsync($"UPDATE reference_values " +
+                $"SET {reportItem.Name} = '{value}' " +
+                $"WHERE report_id = {ReportID}");
         }
 
         protected override async Task InsertDataForDataTable(ReportItem reportItem)
@@ -142,20 +125,29 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
 
         protected override async Task ExecuteNonQueryAsync(string query)
         {
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
+            using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))
+            {
+                await connection.OpenAsync();
 
-            try
-            {
-                await command.ExecuteNonQueryAsync();
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                try
+                {
+                    await command.ExecuteNonQueryAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new MySqlReportSaverException(MySqlReportSaverException.problemDuringInsertingData + ex.Message, ex);
+                }
+                finally
+                {
+                    await command.DisposeAsync();
+
+                    await connection.CloseAsync();
+                }
             }
-            catch (Exception ex)
-            {
-                throw new MySqlReportSaverException(MySqlReportSaverException.problemDuringInsertingData + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
-            }
+
+            
         }
     }
 }

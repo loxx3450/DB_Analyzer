@@ -17,10 +17,6 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
         //Data for insert
         protected int ReportID { get; set; }
 
-        //Flags
-        protected bool FirstScalarValue { get; set; }
-        protected bool FirstReferenceValue { get; set; }
-
         public DbDataInserter(DbConnection connection, DbConnection analyzedDbConnection) 
             : base(analyzedDbConnection)
         {
@@ -29,9 +25,9 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         public async Task InsertData(List<ReportItem> reportItems)
         {
-            await InsertDataForReport();
+            await InsertDefaultDataForReport();
 
-            foreach (var reportItem in reportItems)
+            await Parallel.ForEachAsync(reportItems, async (reportItem, state) =>
             {
                 if (TypesHandler.TypesHandler.IsScalarValueType(reportItem))
                 {
@@ -45,10 +41,10 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
                 {
                     await InsertDataForDataTable(reportItem);
                 }
-            }
+            });
         }
 
-        protected abstract Task InsertDataForReport();
+        protected abstract Task InsertDefaultDataForReport();
 
         protected abstract Task<int> GetReportID();
 

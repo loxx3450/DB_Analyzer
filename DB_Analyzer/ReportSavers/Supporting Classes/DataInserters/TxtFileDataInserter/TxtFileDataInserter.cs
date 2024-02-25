@@ -32,8 +32,6 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
 
                 await writer.WriteAsync("\n\n\n\n\n\n\n");
             }
-
-            Report rep = JsonConvert.DeserializeObject<Report>(result);
         }
 
         private void FillReportWithData(List<ReportItem> reportItems, Report report)

@@ -33,9 +33,9 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 
         protected abstract Task CreateTableIfNotExists(string dbName, string parameters);
 
-        private async Task ProvideExtendedStructure(List<ReportItem> reportItems)
+        private Task ProvideExtendedStructure(List<ReportItem> reportItems)
         {
-            foreach (var reportItem in reportItems)
+            return Parallel.ForEachAsync(reportItems, async (reportItem, state) =>
             {
                 if (TypesHandler.TypesHandler.IsScalarValueType(reportItem))
                 {
@@ -49,7 +49,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
                 {
                     await ProvideExtendedStructureForDataTable(reportItem);
                 }
-            }
+            });
         }
 
         protected abstract Task ProvideExtendedStructureForScalarValue(ReportItem reportItem);

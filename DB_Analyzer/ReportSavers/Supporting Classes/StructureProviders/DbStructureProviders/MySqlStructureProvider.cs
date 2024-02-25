@@ -108,37 +108,51 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 
         protected override async Task<bool> Exists(string query)
         {
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
+            using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))
+            {
+                await connection.OpenAsync();
 
-            try
-            {
-                return Convert.ToBoolean(await command.ExecuteScalarAsync());
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlReportSaverException(MySqlReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                try
+                {
+                    return Convert.ToBoolean(await command.ExecuteScalarAsync());
+                }
+                catch (Exception ex)
+                {
+                    throw new MySqlReportSaverException(MySqlReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
+                }
+                finally
+                {
+                    await command.DisposeAsync();
+
+                    await connection.CloseAsync();
+                }
             }
         }
 
         protected override async Task ExecuteNonQueryAsync(string query)
         {
-            MySqlCommand command = new MySqlCommand(query, (MySqlConnection)Connection);
+            using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))
+            {
+                await connection.OpenAsync();
 
-            try
-            {
-                await command.ExecuteNonQueryAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new MySqlReportSaverException(MySqlReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
-            }
-            finally
-            {
-                await command.DisposeAsync();
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                try
+                {
+                    await command.ExecuteNonQueryAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new MySqlReportSaverException(MySqlReportSaverException.problemDuringProvidingStructure + ex.Message, ex);
+                }
+                finally
+                {
+                    await command.DisposeAsync();
+
+                    await connection.CloseAsync();
+                }
             }
         }
     }

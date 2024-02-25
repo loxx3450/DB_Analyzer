@@ -12,7 +12,8 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
 {
     internal static class TypesHandler
     {
-        //Getting Value Type/Description
+        // === Getting Value Type/Description ===
+        // Scalar types Values
         public static Type GetScalarValueType(ReportItem reportItem)
         {
             if (!IsScalarValueType(reportItem))
@@ -26,7 +27,7 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             return GetScalarValueType(reportItem).Name.ToLower();
         }
 
-
+        //Reference types Values
         public static Type GetReferenceValueType(ReportItem reportItem)
         {
             if (!IsReferenceValueType(reportItem))
@@ -44,7 +45,7 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             throw new TypesHandlerException("Unknown data type...", new ArgumentException());
         }
 
-
+        //DataTable Values
         public static Type GetDataColumnValueType(DataColumn column)
         {
             return column.DataType;
@@ -55,7 +56,8 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             return GetDataColumnValueType(column).Name.ToLower();
         }
 
-        //Checking ValueTypes
+        //  === Checking ValueTypes ===
+        // Scalar types Values
         public static bool IsScalarValueType(ReportItem reportItem)        
         {
             return GetTypeOfReportItem(reportItem).IsPrimitive;
@@ -66,7 +68,7 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             return type.IsPrimitive;
         }
 
-
+        //Reference types Values
         public static bool IsReferenceValueType(ReportItem reportItem)
         {
             return !IsDataTableValueType(reportItem) && !IsScalarValueType(reportItem);
@@ -77,7 +79,7 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             return !IsDataTableValueType(type) && !IsScalarValueType(type);
         }
 
-
+        //DataTable Values
         public static bool IsDataTableValueType(ReportItem reportItem)
         {
             return GetTypeOfReportItem(reportItem) == typeof(DataTable);

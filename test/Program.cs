@@ -2,10 +2,6 @@
 using DB_Analyzer.Managers;
 using DB_Analyzer.ReportItems;
 using DB_Analyzer.ReportItems.Flags;
-//using DB_Analyzer.ReportItems.Functions.Global;
-//using DB_Analyzer.ReportItems.Functions.Scalar;
-//using DB_Analyzer.ReportItems.Functions.TableValued;
-//using DB_Analyzer.ReportItems.StoredProcedures;
 using DB_Analyzer.ReportItems.Tables;
 using DB_Analyzer.ReportSavers;
 using DB_Analyzer.ReportSavers.DbReportSavers;
@@ -39,8 +35,8 @@ await manager.Analyze(reportItems);
 
 
 //ReportSaver reportSaver = new MySqlReportSaver(@"Server=127.0.0.1;port=3306;uid=root;Database=test", manager.Connection);
-//ReportSaver reportSaver = new SqlServerReportSaver(@"Server = (localdb)\MSSQLLocalDB; Database = s; Trusted_Connection = True; Encrypt = False", manager.Connection);
-ReportSaver reportSaver = new TxtFileReportSaver(manager.Connection);
+ReportSaver reportSaver = new SqlServerReportSaver(@"Server = (localdb)\MSSQLLocalDB; Database = s; Trusted_Connection = True; Encrypt = False;MultipleActiveResultSets=true", manager.Connection);
+//ReportSaver reportSaver = new TxtFileReportSaver(manager.Connection);
 
 await manager.SaveReport(reportSaver, reportItems);
 
