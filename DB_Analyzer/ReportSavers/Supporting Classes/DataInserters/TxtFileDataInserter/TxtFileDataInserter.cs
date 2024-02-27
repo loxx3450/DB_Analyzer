@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Data.Common;
+using DB_Analyzer.Exceptions.ReportSaverExceptions;
 
 namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataInserter
 {
@@ -68,6 +69,8 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
                 case "int32":
                     report.CollectionOfIntegers.Add((int)reportItem.Value);
                     break;
+                default:
+                    throw new TxtFileReportSaverException(TxtFileReportSaverException.tryToSaveUnknownType);
             }
         }
 
@@ -78,6 +81,8 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
                 case "List<string>":
                     report.CollectionOfStringLists.Add((List<string>)reportItem.Value);
                     break;
+                default:
+                    throw new TxtFileReportSaverException(TxtFileReportSaverException.tryToSaveUnknownType);
             }
         }
     }

@@ -14,8 +14,12 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 {
     internal abstract class DbStructureProvider : IStructureProvider
     {
+        //Global
         protected DbConnection Connection { get; set; }
         protected TypesConvertor TypesConvertor { get; set; }
+
+        //Flags
+        protected bool DefaultStructureIsProvided { get; set; }
 
         public DbStructureProvider(DbConnection connection)
         {
@@ -24,7 +28,8 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 
         public async Task ProvideStructure(List<ReportItem> reportItems)
         {
-            await ProvideDefaultStructure();
+            if (!DefaultStructureIsProvided)
+                await ProvideDefaultStructure();
 
             await ProvideExtendedStructure(reportItems);
         }

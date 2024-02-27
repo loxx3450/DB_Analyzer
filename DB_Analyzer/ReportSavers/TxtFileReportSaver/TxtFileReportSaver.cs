@@ -21,9 +21,11 @@ namespace DB_Analyzer.ReportSavers.TxtFileReportSaver
             DataInserter = new TxtFileDataInserter(AnalyzedDbConnection);
         }
 
-        public override async Task SaveReport(List<ReportItem> reportItems)
+        public override Task SaveReport(List<ReportItem> reportItems)
         {
-            await ((TxtFileDataInserter)DataInserter).InsertData(reportItems, ((TxtFileStructureProvider)StructureProvider).ProvideStructure());
+            Report structure = ((TxtFileStructureProvider)StructureProvider).ProvideStructure();
+
+            return ((TxtFileDataInserter)DataInserter).InsertData(reportItems, structure);
         }
     }
 }

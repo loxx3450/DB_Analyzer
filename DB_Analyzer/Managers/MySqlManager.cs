@@ -34,6 +34,15 @@ namespace DB_Analyzer.Managers
             });
         }
 
+        public override async Task ChangeConnectionString(string connectionString)
+        {
+            await CloseConnectionAsync();
+
+            ConnectionString = connectionString;
+
+            Connection = new MySqlConnection(ConnectionString);
+        }
+
         public override List<ReportItem> GetAllPossibleReportItems()
         {
             return ReportItemsListCreator.GetAllPossibleReportItems<IMySqlReportItem>();

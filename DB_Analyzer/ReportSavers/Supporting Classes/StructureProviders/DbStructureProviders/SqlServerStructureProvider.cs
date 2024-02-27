@@ -47,6 +47,8 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
                 "id INT PRIMARY KEY IDENTITY(1,1), " +
                 "reference_value_name NVARCHAR(MAX) NOT NULL, " +
                 "type_name NVARCHAR(MAX) NOT NULL");
+
+            DefaultStructureIsProvided = true;
         }
 
         protected override async Task CreateTableIfNotExists(string dbName, string parameters)

@@ -15,6 +15,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 using DB_Analyzer.ReportSavers.Supporting_Classes.StructureProviders.TxtFileStructureProvider;
+using System.Data.Common;
 
 #region main
 
@@ -30,12 +31,11 @@ await manager.ConnectToDBAsync();
 
 List<ReportItem> reportItems = manager.GetAllPossibleReportItems();
 
-
 await manager.Analyze(reportItems);
 
 
 //ReportSaver reportSaver = new MySqlReportSaver(@"Server=127.0.0.1;port=3306;uid=root;Database=test", manager.Connection);
-ReportSaver reportSaver = new SqlServerReportSaver(@"Server = (localdb)\MSSQLLocalDB; Database = s; Trusted_Connection = True; Encrypt = False;MultipleActiveResultSets=true", manager.Connection);
+ReportSaver reportSaver = new SqlServerReportSaver(@"Server=(localdb)\MSSQLLocalDB;Database=s;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true", manager.Connection);
 //ReportSaver reportSaver = new TxtFileReportSaver(manager.Connection);
 
 await manager.SaveReport(reportSaver, reportItems);
@@ -43,6 +43,20 @@ await manager.SaveReport(reportSaver, reportItems);
 #endregion
 
 #region test
+//public class BoolReportItem : ReportItem, IReportItem<bool>
+//{
+//    public override string Name { get; } = "bool_value";
+
+//    public override async Task Run(DbAnalyzer analyzer)
+//    {
+//        Value = false;
+//    }
+//}
+
+
+
+
+
 //foreach (var reportItem in reportItems)
 //{
 //    if (reportItem is IReportItem<int>)

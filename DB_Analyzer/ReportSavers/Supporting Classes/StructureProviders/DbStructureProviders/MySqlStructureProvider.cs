@@ -50,6 +50,8 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
                 "reference_value_name TEXT NOT NULL, " +
                 "type_name TEXT NOT NULL");
+
+            DefaultStructureIsProvided = true;
         }
 
         protected override async Task CreateTableIfNotExists(string dbName, string parameters)
