@@ -122,6 +122,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             await ExecuteNonQueryAsync(query);
         }
 
+        //Routine Methods to execute queries in different ways
         protected override async Task ExecuteNonQueryAsync(string query)
         {
             SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);

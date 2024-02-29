@@ -13,9 +13,12 @@ namespace DB_Analyzer.ReportSavers
 {
     public abstract class ReportSaver
     {
+        //Connection of analyzed DB
+        internal DbConnection AnalyzedDbConnection { get; set; }
+
+        //Supporting Objects for saving Report
         internal IStructureProvider StructureProvider { get; set; }
         internal DataInserter DataInserter { get; set; }
-        internal DbConnection AnalyzedDbConnection { get; set; }
 
         public ReportSaver(DbConnection analyzedDbConnection)
         {

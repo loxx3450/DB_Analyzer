@@ -31,6 +31,7 @@ await manager.ConnectToDBAsync();
 
 List<ReportItem> reportItems = manager.GetAllPossibleReportItems();
 
+
 await manager.Analyze(reportItems);
 
 
@@ -40,46 +41,4 @@ ReportSaver reportSaver = new SqlServerReportSaver(@"Server=(localdb)\MSSQLLocal
 
 await manager.SaveReport(reportSaver, reportItems);
 
-#endregion
-
-#region test
-//public class BoolReportItem : ReportItem, IReportItem<bool>
-//{
-//    public override string Name { get; } = "bool_value";
-
-//    public override async Task Run(DbAnalyzer analyzer)
-//    {
-//        Value = false;
-//    }
-//}
-
-
-
-
-
-//foreach (var reportItem in reportItems)
-//{
-//    if (reportItem is IReportItem<int>)
-//        Console.WriteLine(reportItem.GetValue<int>());
-//    else if (reportItem is IReportItem<List<string>>)
-//    {
-//        List<string> s = reportItem.GetValue<List<string>>();
-
-//        s.ForEach(s => Console.WriteLine(s));
-//    }
-//    else if (reportItem is IReportItem<DataTable>)
-//    {
-//        DataTable dt = reportItem.GetValue<DataTable>();
-
-//        foreach (DataRow dr in dt.Rows)
-//        {
-//            for (int i = 0; i < dt.Columns.Count; i++)
-//            {
-//                Console.Write(dr[i]);
-//            }
-
-//            Console.WriteLine();
-//        }
-//    }
-//}
 #endregion

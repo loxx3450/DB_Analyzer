@@ -21,6 +21,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
             : base(analyzedDbConnection)
         { }
 
+        //Report will be filled and saved
         public async Task InsertData(List<ReportItem> reportItems, Report report)
         {
             FillReportWithData(reportItems, report);
@@ -35,6 +36,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
             }
         }
 
+        //Adds values of ReportItems in Report
         private void FillReportWithData(List<ReportItem> reportItems, Report report)
         {
             report.DbmsName = GetDbmsName();

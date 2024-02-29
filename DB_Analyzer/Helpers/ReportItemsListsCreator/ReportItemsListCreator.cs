@@ -15,6 +15,7 @@ namespace DB_Analyzer.Helpers.ReportItemsListsCreator
 {
     internal class ReportItemsListCreator
     {
+        //Hardcorded collection
         protected List<ReportItem> allReportItems = new List<ReportItem>()
         {
             new NumberOfTablesReportItem(),
@@ -34,6 +35,7 @@ namespace DB_Analyzer.Helpers.ReportItemsListsCreator
             new TableValuedFunctionsFullInfoReportItem()
         };
 
+        //Checks ReportItem on realizing specific interface-flag (ISqlServerReportItem, IMySqlReportItem etc.)
         public List<ReportItem> GetAllPossibleReportItems<T>()
         {
             List<ReportItem> reportItems = new List<ReportItem>();

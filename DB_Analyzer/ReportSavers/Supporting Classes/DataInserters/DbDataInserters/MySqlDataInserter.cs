@@ -123,6 +123,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
             await ExecuteNonQueryAsync(query);
         }
 
+        //Routine Methods to execute queries in different ways
         protected override async Task ExecuteNonQueryAsync(string query)
         {
             using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))
@@ -146,8 +147,6 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.DbDataInsert
                     await connection.CloseAsync();
                 }
             }
-
-            
         }
     }
 }

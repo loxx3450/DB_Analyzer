@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems
 {
+    //Interface-Flag to find out which type of value is inside of the ReportItem
     public interface IReportItem<T>
     { }
 }

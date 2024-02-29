@@ -34,10 +34,12 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
             await ProvideExtendedStructure(reportItems);
         }
 
+        //Is supposed to be fully completed only once by saving report
         protected abstract Task ProvideDefaultStructure();
 
         protected abstract Task CreateTableIfNotExists(string dbName, string parameters);
 
+        //Extends already created Structure
         private Task ProvideExtendedStructure(List<ReportItem> reportItems)
         {
             return Parallel.ForEachAsync(reportItems, async (reportItem, state) =>
@@ -63,6 +65,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
 
         protected abstract Task ProvideExtendedStructureForDataTable(ReportItem reportItem);
 
+        //Routine Methods to execute queries in different ways
         protected abstract Task<bool> Exists(string query);
 
         protected abstract Task ExecuteNonQueryAsync(string query);

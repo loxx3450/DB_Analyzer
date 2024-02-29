@@ -18,6 +18,7 @@ namespace DB_Analyzer.Analyzers
             Connection = connection;
         }
 
+        //Methods to get some info
         public abstract Task<int> GetNumberOfTables();
 
         public abstract Task<List<string>> GetTablesNames();
@@ -48,6 +49,7 @@ namespace DB_Analyzer.Analyzers
 
         public abstract Task<DataTable> GetFunctionsFullInfo();
 
+        //Routine Methods to execute queries in different ways
         protected abstract Task<int> GetIntValueAsync(string query);
 
         protected abstract Task<List<string>> GetListOfStringValuesAsync(string query, string column);

@@ -16,6 +16,7 @@ namespace DB_Analyzer.ReportSavers.DbReportSavers
 {
     public abstract class DbReportSaver : ReportSaver
     {
+        //Connection 
         protected DbConnection Connection { get; set; }
 
         public DbReportSaver(DbConnection connection, DbConnection analyzedDbConnection)

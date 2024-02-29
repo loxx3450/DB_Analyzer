@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportItems
 {
+    //Base class for all ReportItems. Should be combinated with IReportItem<T> to describe type of Value
     public abstract class ReportItem
     {
         public abstract string Name { get; }

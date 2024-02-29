@@ -90,7 +90,7 @@ namespace DB_Analyzer.ReportSavers.TypesHandler
             return type == typeof(DataTable);
         }
 
-        //Global
+        //Getting type of ReportItem by finding interface-flag IReportItem<T>
         private static Type GetTypeOfReportItem(ReportItem reportItem)
         {
             foreach (Type iface in reportItem.GetType().GetInterfaces())

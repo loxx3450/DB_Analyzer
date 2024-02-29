@@ -16,6 +16,7 @@ namespace DB_Analyzer.Analyzers
             : base(connection)
         { }
 
+        //Methods to get some info
         public override Task<int> GetNumberOfTables()
         {
             return GetIntValueAsync($"SELECT COUNT(*) " +
@@ -118,6 +119,7 @@ namespace DB_Analyzer.Analyzers
                 $"  AND ROUTINE_SCHEMA=\"{Connection.Database}\";");
         }
 
+        //Routine Methods to execute queries in different ways
         protected override async Task<int> GetIntValueAsync(string query)
         {
             using (MySqlConnection connection = new MySqlConnection(Connection.ConnectionString))

@@ -23,6 +23,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
             Connection = connection;
         }
 
+        //Full path of inserting Data
         public async Task InsertData(List<ReportItem> reportItems)
         {
             await InsertDefaultDataForReport();
@@ -54,6 +55,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters.DbDataInserters
 
         protected abstract Task InsertDataForDataTable(ReportItem reportItem);
 
+        //Routine Methods to execute queries in different ways
         protected abstract Task ExecuteNonQueryAsync(string query);
     }
 }

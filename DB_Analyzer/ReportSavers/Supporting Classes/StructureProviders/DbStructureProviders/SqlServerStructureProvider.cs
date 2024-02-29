@@ -105,6 +105,7 @@ namespace DB_Analyzer.ReportSavers.StructureProviders.DbStructureProviders
             }
         }
 
+        //Routine Methods to execute queries in different ways
         protected override async Task<bool> Exists(string query)
         {
             SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);

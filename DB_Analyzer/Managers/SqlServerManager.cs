@@ -21,16 +21,7 @@ namespace DB_Analyzer.Managers
             : base(connectionString, new SqlConnection(connectionString))
         { }
 
-        public override Task Analyze(List<ReportItem> reportItems)
-        {
-            Analyzer = new SqlServerAnalyzer((SqlConnection)Connection);
-
-            return Parallel.ForEachAsync(reportItems, async (item, state) =>
-            {
-                await item.Run(Analyzer);
-            });
-        }
-
+        //Changing Connection in Runtime
         public override async Task ChangeConnectionString(string connectionString)
         {
             await CloseConnectionAsync();
@@ -43,6 +34,16 @@ namespace DB_Analyzer.Managers
         public override List<ReportItem> GetAllPossibleReportItems()
         {
             return ReportItemsListCreator.GetAllPossibleReportItems<ISqlServerReportItem>();
+        }
+
+        public override Task Analyze(List<ReportItem> reportItems)
+        {
+            Analyzer = new SqlServerAnalyzer((SqlConnection)Connection);
+
+            return Parallel.ForEachAsync(reportItems, async (item, state) =>
+            {
+                await item.Run(Analyzer);
+            });
         }
     }
 }

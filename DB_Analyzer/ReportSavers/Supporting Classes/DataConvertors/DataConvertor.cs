@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportSavers.DataConvertors
 {
+    //Converts values from C# in correct analog in exact DBMS
     internal abstract class DataConvertor
     {
         public abstract string ConvertValue(object value, Type type);

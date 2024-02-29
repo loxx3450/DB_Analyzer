@@ -12,8 +12,10 @@ using DB_Analyzer.Exceptions.ReportSaverExceptions;
 
 namespace DB_Analyzer.ReportSavers.DataInserters
 {
+    //Childrens are used to insert Data in already created Structure
     internal abstract class DataInserter
     {
+        //Global
         protected DbConnection AnalyzedDbConnection { get; set; }
         protected DataConvertor? DataConvertor { get; set; } = null;
 
@@ -22,6 +24,7 @@ namespace DB_Analyzer.ReportSavers.DataInserters
             AnalyzedDbConnection = analyzedDbConnection;
         }
 
+        //Getting name of DBMS by defining type of Connection
         protected string GetDbmsName()
         {
             if (AnalyzedDbConnection is MySqlConnection)

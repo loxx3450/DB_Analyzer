@@ -14,9 +14,14 @@ namespace DB_Analyzer.Managers
 {
     public abstract class Manager
     {
+        //Connection
         public DbConnection Connection { get; protected set; }
         public string ConnectionString { get; protected set; }
+
+        //Analyzer
         protected DbAnalyzer Analyzer { get; set; }
+
+        //Helper
         internal ReportItemsListCreator ReportItemsListCreator { get; set; }
 
         public Manager(string connectionString, DbConnection connection) 
@@ -27,8 +32,6 @@ namespace DB_Analyzer.Managers
 
             ReportItemsListCreator = new ReportItemsListCreator();
         }
-
-        public abstract Task ChangeConnectionString(string connectionString);
 
         public async Task ConnectToDBAsync()
         {
@@ -42,14 +45,17 @@ namespace DB_Analyzer.Managers
             }
         }
 
+        //Changing Connection in Runtime
+        public abstract Task ChangeConnectionString(string connectionString);
+
+        public abstract List<ReportItem> GetAllPossibleReportItems();
+
+        public abstract Task Analyze(List<ReportItem> reportItems);
+
         public Task SaveReport(ReportSaver reportSaver, List<ReportItem> reportItems)
         {
             return reportSaver.SaveReport(reportItems);
         }
-
-        public abstract Task Analyze(List<ReportItem> reportItems);
-
-        public abstract List<ReportItem> GetAllPossibleReportItems();
 
         protected async Task CloseConnectionAsync()
         {

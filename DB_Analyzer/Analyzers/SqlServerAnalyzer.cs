@@ -17,6 +17,7 @@ namespace DB_Analyzer.Analyzers
             : base(connection)
         { }
 
+        //Methods to get some info
         public override Task<int> GetNumberOfTables()
         {
             return GetIntValueAsync("SELECT COUNT(*) " +
@@ -135,6 +136,7 @@ namespace DB_Analyzer.Analyzers
                 "WHERE TYPE_DESC LIKE '%function%'");
         }
 
+        //Routine Methods to execute queries in different ways
         protected override async Task<int> GetIntValueAsync(string query)
         {
             SqlCommand command = new SqlCommand(query, (SqlConnection)Connection);

@@ -18,22 +18,11 @@ namespace DB_Analyzer.Managers
 {
     public class MySqlManager : Manager
     {
-        static object locker = new object();
-
         public MySqlManager(string connectionString)
             : base(connectionString, new MySqlConnection(connectionString))
         { }
 
-        public override Task Analyze(List<ReportItem> reportItems)
-        {
-            Analyzer = new MySqlAnalyzer((MySqlConnection)Connection);
-
-            return Parallel.ForEachAsync(reportItems, async (item, state) =>
-            {
-                await item.Run(Analyzer);
-            });
-        }
-
+        //Changing Connection in Runtime
         public override async Task ChangeConnectionString(string connectionString)
         {
             await CloseConnectionAsync();
@@ -46,6 +35,16 @@ namespace DB_Analyzer.Managers
         public override List<ReportItem> GetAllPossibleReportItems()
         {
             return ReportItemsListCreator.GetAllPossibleReportItems<IMySqlReportItem>();
+        }
+
+        public override Task Analyze(List<ReportItem> reportItems)
+        {
+            Analyzer = new MySqlAnalyzer((MySqlConnection)Connection);
+
+            return Parallel.ForEachAsync(reportItems, async (item, state) =>
+            {
+                await item.Run(Analyzer);
+            });
         }
     }
 }

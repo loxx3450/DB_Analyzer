@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportSavers.StructureProviders
 {
+    //Childrens are used to create structure for future insertion of Data
     internal interface IStructureProvider
     {
 

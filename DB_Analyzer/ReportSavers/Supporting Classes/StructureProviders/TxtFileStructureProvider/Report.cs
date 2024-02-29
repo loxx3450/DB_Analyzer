@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace DB_Analyzer.ReportSavers.Supporting_Classes.StructureProviders.TxtFileStructureProvider
 {
+    //Object which contains results of ReportItems and could be easily serialized
     public class Report
     {
         public string DbmsName { get; set; }
