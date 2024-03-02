@@ -21,21 +21,21 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.StructureProviders.TxtFile
 
         public DateTime CreationDate { get; set; }
 
-        public List<int> CollectionOfIntegers { get; set; }
+        public Dictionary<string, int> CollectionOfIntegers { get; set; }
 
-        public List<List<string>> CollectionOfStringLists { get; set; }
+        public Dictionary<string, List<string>> CollectionOfStringLists { get; set; }
 
-        public List<DataTable> CollectionOfDataTables { get; set; }
+        public Dictionary<string, DataTable> CollectionOfDataTables { get; set; }
 
         public Report()
-        { 
+        {
             DbName = string.Empty;
 
             CreationDate = DateTime.MinValue;
 
-            CollectionOfIntegers = new List<int>(); 
-            CollectionOfStringLists = new List<List<string>>();
-            CollectionOfDataTables = new List<DataTable>();
+            CollectionOfIntegers = new Dictionary<string, int>();
+            CollectionOfStringLists = new Dictionary<string, List<string>>();
+            CollectionOfDataTables = new Dictionary<string, DataTable>();
         }
     }
 }

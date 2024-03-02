@@ -59,7 +59,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
                 }
                 else if (TypesHandler.TypesHandler.IsDataTableValueType(reportItem))
                 {
-                    report.CollectionOfDataTables.Add((DataTable)reportItem.Value);
+                    report.CollectionOfDataTables.Add(reportItem.Name, (DataTable)reportItem.Value);
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
             switch (TypesHandler.TypesHandler.GetScalarValueTypeDescription(reportItem))
             {
                 case "int32":
-                    report.CollectionOfIntegers.Add((int)reportItem.Value);
+                    report.CollectionOfIntegers.Add(reportItem.Name, (int)reportItem.Value);
                     break;
                 default:
                     throw new TxtFileReportSaverException(TxtFileReportSaverException.tryToSaveUnknownType);
@@ -81,7 +81,7 @@ namespace DB_Analyzer.ReportSavers.Supporting_Classes.DataInserters.TxtFileDataI
             switch (TypesHandler.TypesHandler.GetReferenceValueTypeDescription(reportItem))
             {
                 case "List<string>":
-                    report.CollectionOfStringLists.Add((List<string>)reportItem.Value);
+                    report.CollectionOfStringLists.Add(reportItem.Name, (List<string>)reportItem.Value);
                     break;
                 default:
                     throw new TxtFileReportSaverException(TxtFileReportSaverException.tryToSaveUnknownType);

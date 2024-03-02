@@ -36,8 +36,8 @@ await manager.Analyze(reportItems);
 
 
 //ReportSaver reportSaver = new MySqlReportSaver(@"Server=127.0.0.1;port=3306;uid=root;Database=test", manager.Connection);
-ReportSaver reportSaver = new SqlServerReportSaver(@"Server=(localdb)\MSSQLLocalDB;Database=s;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true", manager.Connection);
-//ReportSaver reportSaver = new TxtFileReportSaver(manager.Connection);
+//ReportSaver reportSaver = new SqlServerReportSaver(@"Server=(localdb)\MSSQLLocalDB;Database=s;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true", manager.Connection);
+ReportSaver reportSaver = new TxtFileReportSaver(manager.Connection);
 
 await manager.SaveReport(reportSaver, reportItems);
 
